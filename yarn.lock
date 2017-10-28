@@ -136,7 +136,7 @@ are-we-there-yet@~1.1.2:
     delegates "^1.0.0"
     readable-stream "^2.0.6"
 
-argparse@^1.0.7, argparse@~1.0.3:
+argparse@^1.0.7, argparse@~1.0.2, argparse@~1.0.3:
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/argparse/-/argparse-1.0.9.tgz#73d83bc263f86e97f8cc4f6bae1b0e90a7d22c86"
   dependencies:
@@ -1210,6 +1210,10 @@ browserify-zlib@^0.1.4:
   resolved "https://registry.yarnpkg.com/browserify-zlib/-/browserify-zlib-0.1.4.tgz#bb35f8a519f600e0fa6b8485241c979d0141fb2d"
   dependencies:
     pako "~0.2.0"
+
+browserkeymap@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/browserkeymap/-/browserkeymap-0.1.0.tgz#aa6dde5341caba581fa25aabbbf69656d6035888"
 
 browserslist@^1.3.6, browserslist@^1.5.2, browserslist@^1.7.6:
   version "1.7.7"
@@ -4072,6 +4076,16 @@ markdown-it-plantuml@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/markdown-it-plantuml/-/markdown-it-plantuml-0.3.0.tgz#6eb039c45f618e89bb992968f7922765f2735665"
 
+markdown-it@^4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/markdown-it/-/markdown-it-4.4.0.tgz#3df373dbea587a9a7fef3e56311b68908f75c414"
+  dependencies:
+    argparse "~1.0.2"
+    entities "~1.1.1"
+    linkify-it "~1.2.0"
+    mdurl "~1.0.0"
+    uc.micro "^1.0.0"
+
 markdown-it@^5.0.3:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/markdown-it/-/markdown-it-5.1.0.tgz#25286b8465bac496f3f1b77eed544643e9bd718d"
@@ -4132,7 +4146,7 @@ md5@^2.0.0:
     crypt "~0.0.1"
     is-buffer "~1.1.1"
 
-mdurl@^1.0.1, mdurl@~1.0.1:
+mdurl@^1.0.1, mdurl@~1.0.0, mdurl@~1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/mdurl/-/mdurl-1.0.1.tgz#fe85b2ec75a59037f2adfec100fd6c601761152e"
 
@@ -5200,6 +5214,13 @@ prop-types@^15.5.4, prop-types@^15.5.7, prop-types@^15.5.8, prop-types@~15.5.7:
     fbjs "^0.8.9"
     loose-envify "^1.3.1"
 
+prosemirror@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/prosemirror/-/prosemirror-0.2.0.tgz#64e1564eaa97e7bdcbbfef9b67c3ccee3633c3aa"
+  dependencies:
+    browserkeymap "^0.1.0"
+    markdown-it "^4.4.0"
+
 proxy-addr@~1.1.4:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/proxy-addr/-/proxy-addr-1.1.4.tgz#27e545f6960a44a627d9b44467e35c1b6b4ce2f3"
@@ -5349,6 +5370,10 @@ react-input-autosize@^1.1.0:
   dependencies:
     create-react-class "^15.5.2"
     prop-types "^15.5.8"
+
+react-prosemirror@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/react-prosemirror/-/react-prosemirror-0.2.1.tgz#01362f85a0f895e52134b18992b3f113d3704b21"
 
 react-proxy@^1.1.7:
   version "1.1.8"
