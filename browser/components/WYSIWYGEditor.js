@@ -1,6 +1,6 @@
 import React from 'react'
 import ProseMirror from 'react-prosemirror'
-import style from './WYSIWYGEditor.styl'
+import style from './markdown.styl'
 import CSSModules from 'browser/lib/CSSModules'
 
 import 'prosemirror/dist/inputrules/autoinput'
@@ -18,6 +18,12 @@ class WYSIWYGEditor extends React.Component {
     this.setState({
       value: props.value
     })
+  }
+
+  componentDidMount () {
+    const proseMirrorElement = document.getElementsByClassName('ProseMirror')[0]
+    proseMirrorElement.style.border = 'initial'
+    require('./WYSIWYGEditor.styl')
   }
 
   handleOnChange (e) {
