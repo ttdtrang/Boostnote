@@ -3,6 +3,7 @@ import React from 'react'
 import CSSModules from 'browser/lib/CSSModules'
 import styles from './MarkdownNoteDetail.styl'
 import MarkdownEditor from 'browser/components/MarkdownEditor'
+import WYSIWYGEditor from 'browser/components/WYSIWYGEditor'
 import TodoListPercentage from 'browser/components/TodoListPercentage'
 import StarButton from './StarButton'
 import TagSelect from './TagSelect'
@@ -380,15 +381,21 @@ class MarkdownNoteDetail extends React.Component {
         {location.pathname === '/trashed' ? trashTopBar : detailTopBar}
 
         <div styleName='body'>
-          <MarkdownEditor
+          {/* <MarkdownEditor
+              ref='content'
+              styleName='body-noteEditor'
+              config={config}
+              value={this.state.note.content}
+              storageKey={this.state.note.storage}
+              onChange={(e) => this.handleChange(e)}
+              ignorePreviewPointerEvents={this.props.ignorePreviewPointerEvents}
+              /> */}
+          <WYSIWYGEditor
             ref='content'
-            styleName='body-noteEditor'
-            config={config}
             value={this.state.note.content}
-            storageKey={this.state.note.storage}
-            onChange={(e) => this.handleChange(e)}
-            ignorePreviewPointerEvents={this.props.ignorePreviewPointerEvents}
-          />
+            config={config}
+            onChange={(e) => this.handleChange(e)} />
+
         </div>
 
         <StatusBar
