@@ -1,8 +1,7 @@
 import React from 'react'
 import ProseMirror from 'react-prosemirror'
-import style from './markdown.styl'
+import style from './WYSIWYGEditor.styl'
 import CSSModules from 'browser/lib/CSSModules'
-
 
 import 'prosemirror/dist/inputrules/autoinput'
 import 'prosemirror/dist/markdown'
@@ -11,15 +10,13 @@ class WYSIWYGEditor extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      value: props.value,
-      config: props.config
+      value: props.value
     }
   }
 
   componentWillReceiveProps (props) {
     this.setState({
-      value: props.value,
-      config: props.config
+      value: props.value
     })
   }
 
@@ -38,8 +35,7 @@ class WYSIWYGEditor extends React.Component {
         options={{
           docFormat: 'markdown',
           autoInput: true
-        }}
-        ref='pm' />
+        }} />
     )
   }
 }
