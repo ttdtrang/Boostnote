@@ -24,7 +24,8 @@ class WYSIWYGEditor extends React.Component {
   handleOnChange (e) {
     this.setState({
       value: e
-    })
+    }, () => { this.value = e })
+    this.props.onChange(e)
   }
 
   render () {
