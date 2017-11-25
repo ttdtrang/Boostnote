@@ -16,7 +16,8 @@ class WYSIWYGEditor extends React.Component {
 
   componentWillReceiveProps (props) {
     this.setState({
-      value: props.value
+      value: props.value,
+      config: props.config
     })
   }
 
@@ -34,8 +35,13 @@ class WYSIWYGEditor extends React.Component {
 
   render () {
     const { value } = this.state
+    const { config } = this.props
+    const customStyle = {
+      fontSize: `${config.preview.fontSize}px`
+    }
     return (
-      <div styleName='root'>
+      <div styleName='root'
+        style={customStyle}>
         <ProseMirror
           value={value}
           onChange={(e) => this.handleOnChange(e)}
