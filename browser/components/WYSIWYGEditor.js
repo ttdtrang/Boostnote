@@ -21,12 +21,6 @@ class WYSIWYGEditor extends React.Component {
     })
   }
 
-  componentDidMount () {
-    const proseMirrorElement = document.getElementsByClassName('ProseMirror')[0]
-    proseMirrorElement.style.border = 'initial'
-    require('./WYSIWYGEditor.styl')
-  }
-
   handleOnChange (e) {
     this.setState({
       value: e
