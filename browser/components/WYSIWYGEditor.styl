@@ -177,3 +177,52 @@ brandColor = #2BAC8F
         border-color borderColor
         &:last-child
           border-right solid 1px borderColor
+
+themeDarkBackground = darken(#21252B, 10%)
+themeDarkText = #f9f9f9
+themeDarkBorder = lighten(themeDarkBackground, 20%)
+themeDarkPreview = $ui-dark-noteDetail-backgroundColor
+themeDarkTableOdd = themeDarkPreview
+themeDarkTableEven = darken(themeDarkPreview, 10%)
+themeDarkTableHead = themeDarkTableEven
+themeDarkTableBorder = themeDarkBorder
+themeDarkModalButtonDefault = themeDarkPreview
+themeDarkModalButtonDanger = #BF360C
+
+body[data-theme="dark"]
+  .root
+    color themeDarkText
+    border-color themeDarkBorder
+    background-color themeDarkPreview
+    a:hover
+      background-color alpha(lighten(brandColor, 30%), 0.2) !important
+
+    code
+      color #EA6730
+      border-color darken(themeDarkBorder, 10%)
+      background-color lighten(themeDarkPreview, 5%)
+
+    pre
+      border-color lighten(#21252B, 20%)
+      code
+        background-color transparent
+
+    label.taskListItem
+      background-color themeDarkPreview
+    table
+      thead
+        tr
+          background-color themeDarkTableHead
+        th
+          border-color themeDarkTableBorder
+          &:last-child
+            border-right solid 1px themeDarkTableBorder
+      tbody
+        tr:nth-child(2n + 1)
+          background-color themeDarkTableOdd
+        tr:nth-child(2n)
+          background-color themeDarkTableEven
+        td
+          border-color themeDarkTableBorder
+          &:last-child
+            border-right solid 1px themeDarkTableBorder
