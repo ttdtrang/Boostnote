@@ -1,6 +1,6 @@
 import React from 'react'
 import ProseMirror from 'react-prosemirror'
-import style from './markdown.styl'
+import style from './WYSIWYGEditor.styl'
 import CSSModules from 'browser/lib/CSSModules'
 
 import 'prosemirror/dist/inputrules/autoinput'
@@ -35,13 +35,15 @@ class WYSIWYGEditor extends React.Component {
   render () {
     const { value } = this.state
     return (
-      <ProseMirror
-        value={value}
-        onChange={(e) => this.handleOnChange(e)}
-        options={{
-          docFormat: 'markdown',
-          autoInput: true
-        }} />
+      <div styleName='root'>
+        <ProseMirror
+          value={value}
+          onChange={(e) => this.handleOnChange(e)}
+          options={{
+            docFormat: 'markdown',
+            autoInput: true
+          }} />
+      </div>
     )
   }
 }
