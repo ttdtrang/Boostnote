@@ -6,6 +6,12 @@ import CSSModules from 'browser/lib/CSSModules'
 import 'prosemirror/dist/inputrules/autoinput'
 import 'prosemirror/dist/markdown'
 
+function buildStyle (fontSize) {
+  return {
+    fontSize: `${fontSize}px`
+  }
+}
+
 class WYSIWYGEditor extends React.Component {
   constructor (props) {
     super(props)
@@ -36,9 +42,7 @@ class WYSIWYGEditor extends React.Component {
   render () {
     const { value } = this.state
     const { config } = this.props
-    const customStyle = {
-      fontSize: `${config.preview.fontSize}px`
-    }
+    const customStyle = buildStyle(config.preview.fontSize)
     return (
       <div styleName='root'
         style={customStyle}>
