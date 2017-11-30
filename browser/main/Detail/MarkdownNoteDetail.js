@@ -61,7 +61,7 @@ class MarkdownNoteDetail extends React.Component {
       this.setState({
         note: Object.assign({}, nextProps.note)
       }, () => {
-        this.refs.content.reload()
+        if (nextProps.config.editor.type === 'DEFAULT') this.refs.content.reload()
         if (this.refs.tags) this.refs.tags.reset()
       })
     }
