@@ -29,6 +29,10 @@ class WYSIWYGEditor extends React.Component {
     this.props.onChange(e)
   }
 
+  focus () {
+    this.refs.editor.pm.content.focus()
+  }
+
   render () {
     const { value } = this.state
     const { config } = this.props
@@ -41,6 +45,7 @@ class WYSIWYGEditor extends React.Component {
         <ProseMirror
           value={value}
           onChange={(e) => this.handleOnChange(e)}
+          ref='editor'
           options={{
             docFormat: 'markdown',
             autoInput: true
