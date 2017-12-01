@@ -290,7 +290,6 @@ class MarkdownNoteDetail extends React.Component {
   }
 
   render () {
-    this.renderEditor()
     const { data, config, location } = this.props
     const { note } = this.state
     const storageKey = note.storage
