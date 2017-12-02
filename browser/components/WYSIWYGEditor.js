@@ -16,15 +16,13 @@ class WYSIWYGEditor extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      value: props.value,
-      config: props.config
+      value: props.value
     }
   }
 
   componentWillReceiveProps (props) {
     this.setState({
-      value: props.value,
-      config: props.config
+      value: props.value
     })
   }
 
