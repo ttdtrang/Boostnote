@@ -266,7 +266,13 @@ class MarkdownNoteDetail extends React.Component {
   renderEditor () {
     const { config } = this.props
     const editorType = config.editor.type
-    if (editorType === 'DEFAULT') {
+    if (editorType === 'WYSIWYG') {
+      return <WYSIWYGEditor
+        ref='content'
+        value={this.state.note.content}
+        config={config}
+        onChange={(e) => this.handleChange(e)} />
+    } else {
       return <MarkdownEditor
         ref='content'
         styleName='body-noteEditor'
@@ -275,12 +281,6 @@ class MarkdownNoteDetail extends React.Component {
         storageKey={this.state.note.storage}
         onChange={(e) => this.handleChange(e)}
         ignorePreviewPointerEvents={this.props.ignorePreviewPointerEvents} />
-    } else if (editorType === 'WYSIWYG') {
-      return <WYSIWYGEditor
-        ref='content'
-        value={this.state.note.content}
-        config={config}
-        onChange={(e) => this.handleChange(e)} />
     }
   }
 
