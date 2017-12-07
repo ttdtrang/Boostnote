@@ -75,10 +75,16 @@ class MarkdownNoteDetail extends React.Component {
     ee.off('topbar:togglelockbutton', this.toggleLockButton)
   }
 
-  handleChange (e) {
+  handleChange (content = '') {
     const { note } = this.state
+    const { config } = this.props
 
-    note.content = this.refs.content.value
+    if (config.editor.type === 'WYSIWYG') {
+      note.content = content
+    } else {
+      note.content = this.refs.content.value
+    }
+
     if (this.refs.tags) note.tags = this.refs.tags.value
     note.title = markdown.strip(striptags(findNoteTitle(note.content)))
     note.updatedAt = new Date()

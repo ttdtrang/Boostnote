@@ -2,7 +2,9 @@ import React from 'react'
 import ProseMirror from 'react-prosemirror'
 import Editor from 'draft-js-plugins-editor'
 import createMarkdownShortcutsPlugin from 'draft-js-markdown-shortcuts-plugin';
-import { mdToDraftjs } from 'draftjs-md-converter'
+import { stateToMarkdown } from 'draft-js-export-markdown'
+import { stateFromHTML } from 'draft-js-import-html'
+import markdown from 'browser/lib/markdown'
 import { EditorState, ContentState, convertFromRaw } from 'draft-js'
 
 import style from './WYSIWYGEditor.styl'
@@ -19,27 +21,30 @@ const plugins = [createMarkdownShortcutsPlugin()]
 class WYSIWYGEditor extends React.Component {
   constructor (props) {
     super(props)
-    const mdContent = convertFromRaw(mdToDraftjs(props.value))
+    const mdContent = stateFromHTML(markdown.render(props.value))
     const initialEditorState = EditorState.createWithContent(mdContent)
     this.state = {
-      editorState: initialEditorState
+      editorState: initialEditorState,
+      markdown: props.value
     }
   }
 
   componentWillReceiveProps (props) {
-    const mdContent = convertFromRaw(mdToDraftjs(props.value))
-    const initialEditorState = EditorState.createWithContent(mdContent)
+    const mdContent = stateFromHTML(markdown.render(props.value))
+    const newEditorState = EditorState.createWithContent(mdContent)
+    if (props.value === this.state.markdown) return
     this.setState({
-      editorState: initialEditorState
+      editorState: newEditorState
     })
   }
 
   handleOnChange (editorState) {
-    // this.setState({
-    //   value: e
-    // }, () => { this.value = e })
-    // this.props.onChange(e)
-    this.setState({editorState})
+    const newMarkdown = stateToMarkdown(editorState.getCurrentContent())
+    const { oldMarkdown } = this.state
+    this.setState({
+      editorState,
+      markdown: newMarkdown
+    }, () => {this.props.onChange(newMarkdown)})
   }
 
   focus () {
