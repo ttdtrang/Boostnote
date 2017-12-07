@@ -1,10 +1,12 @@
 import React from 'react'
 import ProseMirror from 'react-prosemirror'
+import Editor from 'draft-js-plugins-editor'
+import createMarkdownShortcutsPlugin from 'draft-js-markdown-shortcuts-plugin';
+import { mdToDraftjs } from 'draftjs-md-converter'
+import { EditorState, ContentState, convertFromRaw } from 'draft-js'
+
 import style from './WYSIWYGEditor.styl'
 import CSSModules from 'browser/lib/CSSModules'
-
-import 'prosemirror/dist/inputrules/autoinput'
-import 'prosemirror/dist/markdown'
 
 function buildStyle (fontSize) {
   return {
@@ -12,46 +14,50 @@ function buildStyle (fontSize) {
   }
 }
 
+const plugins = [createMarkdownShortcutsPlugin()]
+
 class WYSIWYGEditor extends React.Component {
   constructor (props) {
     super(props)
+    const mdContent = convertFromRaw(mdToDraftjs(props.value))
+    const initialEditorState = EditorState.createWithContent(mdContent)
     this.state = {
-      value: props.value
+      editorState: initialEditorState
     }
   }
 
   componentWillReceiveProps (props) {
+    const mdContent = convertFromRaw(mdToDraftjs(props.value))
+    const initialEditorState = EditorState.createWithContent(mdContent)
     this.setState({
-      value: props.value
+      editorState: initialEditorState
     })
   }
 
-  handleOnChange (e) {
-    this.setState({
-      value: e
-    }, () => { this.value = e })
-    this.props.onChange(e)
+  handleOnChange (editorState) {
+    // this.setState({
+    //   value: e
+    // }, () => { this.value = e })
+    // this.props.onChange(e)
+    this.setState({editorState})
   }
 
   focus () {
-    this.refs.editor.pm.content.focus()
+    this.editor.focus()
   }
 
   render () {
-    const { value } = this.state
     const { config } = this.props
     const customStyle = buildStyle(config.preview.fontSize)
     return (
       <div styleName='root'
         style={customStyle}>
-        <ProseMirror
-          value={value}
-          onChange={(e) => this.handleOnChange(e)}
-          ref='editor'
-          options={{
-            docFormat: 'markdown',
-            autoInput: true
-          }} />
+        <Editor
+          ref={e => (this.editor = e)}
+          editorState={this.state.editorState}
+          onChange={e => this.handleOnChange(e)}
+          plugins={plugins}
+        />
       </div>
     )
   }
