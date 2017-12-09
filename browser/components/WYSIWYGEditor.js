@@ -1,11 +1,9 @@
 import React from 'react'
-import ProseMirror from 'react-prosemirror'
 import Editor from 'draft-js-plugins-editor'
-import createMarkdownShortcutsPlugin from 'draft-js-markdown-shortcuts-plugin';
+import createMarkdownShortcutsPlugin from 'draft-js-markdown-shortcuts-plugin'
 import { stateToMarkdown } from 'draft-js-export-markdown'
-import { stateFromHTML } from 'draft-js-import-html'
 import markdown from 'browser/lib/markdown'
-import { EditorState, ContentState, convertFromRaw } from 'draft-js'
+import { EditorState, convertFromHTML, ContentState } from 'draft-js'
 
 import style from './WYSIWYGEditor.styl'
 import CSSModules from 'browser/lib/CSSModules'
@@ -21,8 +19,12 @@ const plugins = [createMarkdownShortcutsPlugin()]
 class WYSIWYGEditor extends React.Component {
   constructor (props) {
     super(props)
-    const mdContent = stateFromHTML(markdown.render(props.value))
-    const initialEditorState = EditorState.createWithContent(mdContent)
+    const content = convertFromHTML(markdown.render(props.value))
+    const contentState = ContentState.createFromBlockArray(
+      content.contentBlocks,
+      content.entityMap
+    )
+    const initialEditorState = EditorState.createWithContent(contentState)
     this.state = {
       editorState: initialEditorState,
       markdown: props.value
@@ -30,9 +32,13 @@ class WYSIWYGEditor extends React.Component {
   }
 
   componentWillReceiveProps (props) {
-    const mdContent = stateFromHTML(markdown.render(props.value))
-    const newEditorState = EditorState.createWithContent(mdContent)
     if (props.value === this.state.markdown) return
+    const content = convertFromHTML(markdown.render(props.value))
+    const contentState = ContentState.createFromBlockArray(
+      content.contentBlocks,
+      content.entityMap
+    )
+    const newEditorState = EditorState.createWithContent(contentState)
     this.setState({
       editorState: newEditorState
     })
@@ -40,11 +46,10 @@ class WYSIWYGEditor extends React.Component {
 
   handleOnChange (editorState) {
     const newMarkdown = stateToMarkdown(editorState.getCurrentContent())
-    const { oldMarkdown } = this.state
     this.setState({
       editorState,
       markdown: newMarkdown
-    }, () => {this.props.onChange(newMarkdown)})
+    }, () => { this.props.onChange(newMarkdown) })
   }
 
   focus () {
