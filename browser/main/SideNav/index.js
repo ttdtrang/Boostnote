@@ -63,17 +63,13 @@ class SideNav extends React.Component {
 
   handleSwitchTagsButtonClick () {
     const { router } = this.context
-    console.log(location)
     router.push('/alltags')
-    console.log("after push: ")
-    console.log(location)
   }
 
   handleSwitchDateButtonClick () {
     console.log("Should display notes into hierarchy of dates")
     const { router } = this.context
-    console.log(router)
-    console.log(this.context)
+    router.push('/alldates')
   }
   SideNavComponent (isFolded, storageList) {
     const { location, data } = this.props
@@ -84,8 +80,28 @@ class SideNav extends React.Component {
 
     let component
 
-    // TagsMode is not selected
-    if (!location.pathname.match('/tags') && !location.pathname.match('/alltags')) {
+    if (location.pathname.match('/tags') || location.pathname.match('/alltags')) {
+    // Tag mode 
+      component = (
+        <div styleName='tabBody'>
+          <div styleName='tag-title'>
+            <p>Tags</p>
+          </div>
+          <div styleName='tagList'>
+            {this.tagListComponent(data)}
+          </div>
+        </div>
+      )
+    } else if (location.pathname.match('/alldates') || location.pathname.match('/date')) {
+    // Date mode
+      component = (
+        <div styleName='tagBody'>
+         <p>Should show notes in hierarchy of date</p> 
+        </div>
+           )
+
+    } else {
+    // Folder mode
       component = (
         <div>
           <SideNavFilter
@@ -103,17 +119,6 @@ class SideNav extends React.Component {
 
           <StorageList storageList={storageList} />
           <NavToggleButton isFolded={isFolded} handleToggleButtonClick={this.handleToggleButtonClick.bind(this)} />
-        </div>
-      )
-    } else {
-      component = (
-        <div styleName='tabBody'>
-          <div styleName='tag-title'>
-            <p>Tags</p>
-          </div>
-          <div styleName='tagList'>
-            {this.tagListComponent(data)}
-          </div>
         </div>
       )
     }

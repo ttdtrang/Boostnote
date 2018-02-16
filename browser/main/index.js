@@ -70,6 +70,7 @@ ReactDOM.render((
           <IndexRedirect to='/alltags' />
           <Route path=':tagname' />
         </Route>
+        <Route path='alldates' />
         <Route path='storages'>
           <IndexRedirect to='/home' />
           <Route path=':storageKey'>
