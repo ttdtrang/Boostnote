@@ -14,6 +14,7 @@ import EventEmitter from 'browser/main/lib/eventEmitter'
 import PreferenceButton from './PreferenceButton'
 import ListButton from './ListButton'
 import TagButton from './TagButton'
+import DateButton from './DateButton'
 
 class SideNav extends React.Component {
   // TODO: should not use electron stuff v0.7
@@ -62,9 +63,18 @@ class SideNav extends React.Component {
 
   handleSwitchTagsButtonClick () {
     const { router } = this.context
+    console.log(location)
     router.push('/alltags')
+    console.log("after push: ")
+    console.log(location)
   }
 
+  handleSwitchDateButtonClick () {
+    console.log("Should display notes into hierarchy of dates")
+    const { router } = this.context
+    console.log(router)
+    console.log(this.context)
+  }
   SideNavComponent (isFolded, storageList) {
     const { location, data } = this.props
 
@@ -157,6 +167,7 @@ class SideNav extends React.Component {
     const style = {}
     if (!isFolded) style.width = this.props.width
     const isTagActive = location.pathname.match(/tag/)
+    let isDateActive = false
     return (
       <div className='SideNav'
         styleName={isFolded ? 'root--folded' : 'root'}
@@ -167,6 +178,7 @@ class SideNav extends React.Component {
           <div styleName='switch-buttons'>
             <ListButton onClick={this.handleSwitchFoldersButtonClick.bind(this)} isTagActive={isTagActive} />
             <TagButton onClick={this.handleSwitchTagsButtonClick.bind(this)} isTagActive={isTagActive} />
+            <DateButton onClick={this.handleSwitchDateButtonClick.bind(this)} isDateActive={isDateActive} />
           </div>
           <div>
             <PreferenceButton onClick={this.handleMenuButtonClick} />
