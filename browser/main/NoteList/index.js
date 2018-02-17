@@ -9,6 +9,7 @@ import dataApi from 'browser/main/lib/dataApi'
 import ConfigManager from 'browser/main/lib/ConfigManager'
 import NoteItem from 'browser/components/NoteItem'
 import NoteItemSimple from 'browser/components/NoteItemSimple'
+import NoteTree from 'browser/components/NoteTree'
 import searchFromNotes from 'browser/lib/search'
 import fs from 'fs'
 import path from 'path'
@@ -713,49 +714,83 @@ class NoteList extends React.Component {
         yy: '%dY'
       }
     })
+    const sortedNotesByDate = location.pathname.match(/\/home|\/starred|\/trash/)
+        ? this.getNotes().sort(sortByCreatedAt)
+        : this.sortByPin(this.getNotes().sort(sortByCreatedAt));
 
-    const noteList = notes
-      .map(note => {
-        if (note == null) {
-          return null
+    let noteTreeData = {};
+    notes.forEach((note) => {
+        const myDate = new Date(note.createdAt)
+        const [yyyy, mm, dd] = [myDate.getFullYear(), myDate.getMonth(), myDate.getDay()]
+        if (!noteTreeData[yyyy]) {
+          noteTreeData[yyyy] = {}
+          noteTreeData[yyyy][mm] = {}
+          noteTreeData[yyyy][mm][dd] = []
+        } else {
+          if (!noteTreeData[yyyy][mm]) {
+            noteTreeData[yyyy][mm] = {}
+            noteTreeData[yyyy][mm][dd] = []
+          } else {
+            if (!noteTreeData[yyyy][mm][dd]) {
+              noteTreeData[yyyy][mm][dd] = []
+            }
+          }
         }
+        noteTreeData[yyyy][mm][dd].push(note);
+    })
+    const noteList =  (config.listStyle === 'DATETREE') ? (<NoteTree
+      noteTreeData ={noteTreeData}
+      handleNoteContextMenu={this.handleNoteContextMenu.bind(this)}
+      handleNoteClick={this.handleNoteClick.bind(this)}
+      handleDragStart={this.handleDragStart.bind(this)}
+      pathname={location.pathname}
+      />
+    )
+: notes.map(note => {
+          if (note == null) {
+            return null
+          }
+          const isDefault = config.listStyle === 'DEFAULT'
+          const uniqueKey = getNoteKey(note)
+          const isActive = selectedNoteKeys.includes(uniqueKey)
+          const dateDisplay = moment(
+            config.sortBy === 'CREATED_AT'
+              ? note.createdAt : note.updatedAt
+          ).fromNow('D')
 
-        const isDefault = config.listStyle === 'DEFAULT'
-        const uniqueKey = getNoteKey(note)
-        const isActive = selectedNoteKeys.includes(uniqueKey)
-        const dateDisplay = moment(
-          config.sortBy === 'CREATED_AT'
-            ? note.createdAt : note.updatedAt
-        ).fromNow('D')
+          if (config.listStyle === 'SMALL') {
+            return (
+              <NoteItemSimple
+                isActive={isActive}
+                note={note}
+                key={uniqueKey}
+                handleNoteContextMenu={this.handleNoteContextMenu.bind(this)}
+                handleNoteClick={this.handleNoteClick.bind(this)}
+                handleDragStart={this.handleDragStart.bind(this)}
+                pathname={location.pathname}
+              />
+            )
+          } else {  // DEFAULT
+            return (
+              <NoteItem
+                isActive={isActive}
+                note={note}
+                dateDisplay={dateDisplay}
+                key={uniqueKey}
+                handleNoteContextMenu={this.handleNoteContextMenu.bind(this)}
+                handleNoteClick={this.handleNoteClick.bind(this)}
+                handleDragStart={this.handleDragStart.bind(this)}
+                pathname={location.pathname}
+              />
+            )
+          }
+        })
+    
 
-        if (isDefault) {
-          return (
-            <NoteItem
-              isActive={isActive}
-              note={note}
-              dateDisplay={dateDisplay}
-              key={uniqueKey}
-              handleNoteContextMenu={this.handleNoteContextMenu.bind(this)}
-              handleNoteClick={this.handleNoteClick.bind(this)}
-              handleDragStart={this.handleDragStart.bind(this)}
-              pathname={location.pathname}
-            />
-          )
-        }
-
-        return (
-          <NoteItemSimple
-            isActive={isActive}
-            note={note}
-            key={uniqueKey}
-            handleNoteContextMenu={this.handleNoteContextMenu.bind(this)}
-            handleNoteClick={this.handleNoteClick.bind(this)}
-            handleDragStart={this.handleDragStart.bind(this)}
-            pathname={location.pathname}
-          />
-        )
-      })
-
+    // console.log(noteList)
+    // console.log(noteTree)
+    // console.log(this.renderTreeAsList(noteTreeData))
+    // const noteTree = this.renderTreeAsList(noteTreeData);
     return (
       <div className='NoteList'
         styleName='root'
@@ -775,6 +810,14 @@ class NoteList extends React.Component {
             </select>
           </div>
           <div styleName='control-button-area'>
+            <button styleName={config.listStyle === 'DATETREE'
+                ? 'control-button--active'
+                : 'control-button'
+              }
+              onClick={(e) => this.handleListStyleButtonClick(e, 'DATETREE')}
+            >
+              <img styleName='iconTag' src='../resources/icon/icon-column-stratified.svg' />
+            </button>
             <button styleName={config.listStyle === 'DEFAULT'
                 ? 'control-button--active'
                 : 'control-button'
@@ -801,7 +844,7 @@ class NoteList extends React.Component {
         >
           {noteList}
         </div>
-      </div>
+        </div>
     )
   }
 }
