@@ -746,7 +746,7 @@ class NoteList extends React.Component {
       pathname={location.pathname}
       />
     )
-: notes.map(note => {
+    : notes.map(note => {
           if (note == null) {
             return null
           }
@@ -786,11 +786,6 @@ class NoteList extends React.Component {
           }
         })
     
-
-    // console.log(noteList)
-    // console.log(noteTree)
-    // console.log(this.renderTreeAsList(noteTreeData))
-    // const noteTree = this.renderTreeAsList(noteTreeData);
     return (
       <div className='NoteList'
         styleName='root'
@@ -816,7 +811,7 @@ class NoteList extends React.Component {
               }
               onClick={(e) => this.handleListStyleButtonClick(e, 'DATETREE')}
             >
-              <img styleName='iconTag' src='../resources/icon/icon-column-stratified.svg' />
+              <img styleName='iconTag' src='../resources/icon/icon-column-tree.svg' />
             </button>
             <button styleName={config.listStyle === 'DEFAULT'
                 ? 'control-button--active'

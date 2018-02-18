@@ -23,15 +23,9 @@ class NoteTree extends React.Component {
   }
 
   renderTreeAsList (treeObj) {
-
     const treeDisplay = Object.keys(treeObj).map((k) => {
-      const currentNode = (
-        <li>{k}</li>
-        // <p>AAAAAAAAAAA {k}</p>
-      )
       let children
       if  (Array.isArray(treeObj[k])) { 
-        treeObj[k].map((l) => {console.log(l['createdAt'])})
         let liArray = treeObj[k].map((l) => { return ( <li>{l['title']}</li>) })
         children = (
           <ol>
@@ -46,14 +40,10 @@ class NoteTree extends React.Component {
           </ol>
         )
       }
-
-      console.log(currentNode)
-      console.log(children)
       return (
-        <ol>
-          { currentNode }
-          { children }
-        </ol>
+        <li>{k}
+        { children } 
+        </li>
       )
     })
     return (
@@ -65,59 +55,12 @@ class NoteTree extends React.Component {
 
 render () {
   return (
-    this.renderTreeAsList(this.noteTreeData)
+    <div className='NoteTree' styleName='tree'>
+    {this.renderTreeAsList(this.noteTreeData)}
+    </div>
   )
-  //   return (
-  // <ol>
-  // <li>2018</li>
-  //    <ol>
-  //    <li>01</li>
-  //    <ol>
-  //      <li>03</li>
-  //    </ol>
-  //    </ol>
-  // <li>2017</li>
-  // <ol>
-  //   <li>10</li>
-  //   <ol>
-  //   <li>2</li>
-  //     </ol>
-  //   </ol>
-  // </ol>
-  //   )
-  // }
 }
 }
-// const NoteTree = ({ noteTreeData, handleNoteClick, handleNoteContextMenu, handleDragStart, pathname }) => (
-  // <div styleName={isActive
-  //     ? 'item-simple--active'
-  //     : 'item-simple'
-  //   }
-  //   key={`${note.storage}-${note.key}`}
-  //   onClick={e => handleNoteClick(e, `${note.storage}-${note.key}`)}
-  //   onContextMenu={e => handleNoteContextMenu(e, `${note.storage}-${note.key}`)}
-  //   onDragStart={e => handleDragStart(e, note)}
-  //   draggable='true'
-  // >
-  
-  //   <div styleName='item-simple-title'>
-  //     {note.type === 'SNIPPET_NOTE'
-  //       ? <i styleName='item-simple-title-icon' className='fa fa-fw fa-code' />
-  //       : <i styleName='item-simple-title-icon' className='fa fa-fw fa-file-text-o' />
-  //     }
-  //     {note.isPinned && !pathname.match(/\/home|\/starred|\/trash/)
-  //       ? <i styleName='item-pin' className='fa fa-thumb-tack' />
-  //       : ''
-  //     }
-  //     {note.createdAt}
-  //     {note.title.trim().length > 0
-  //       ? note.title
-  //       : <span styleName='item-simple-title-empty'>Empty</span>
-  //     }
-  //   </div>
-  // </div>
-// )
-
 
 // NoteTree.propTypes = {
 //   isActive: PropTypes.bool.isRequired,
