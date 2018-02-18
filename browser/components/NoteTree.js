@@ -18,48 +18,75 @@ import styles from './NoteTree.styl'
 class NoteTree extends React.Component {
   constructor (props) {
     super(props)
+    this.noteTreeData = props.noteTreeData
 
   }
-renderTreeAsList (treeObj) {
-  Object.keys(treeObj).forEach((k) => {
-    if (Array.isArray(treeObj[k])) {
-      treeObj[k].map((l) => {console.log(l['createdAt'])})
-      liArray = treeObj[k].map((l) => { return ( <li>{l['title']}</li>) })
+
+  renderTreeAsList (treeObj) {
+
+    const treeDisplay = Object.keys(treeObj).map((k) => {
+      const currentNode = (
+        <li>{k}</li>
+        // <p>AAAAAAAAAAA {k}</p>
+      )
+      let children
+      if  (Array.isArray(treeObj[k])) { 
+        treeObj[k].map((l) => {console.log(l['createdAt'])})
+        let liArray = treeObj[k].map((l) => { return ( <li>{l['title']}</li>) })
+        children = (
+          <ol>
+            {liArray}
+          </ol>
+        )
+      } else {
+        let subTree = this.renderTreeAsList(treeObj[k])
+        children = (
+          <ol>
+            { subTree }
+          </ol>
+        )
+      }
+
+      console.log(currentNode)
+      console.log(children)
       return (
         <ol>
-          {liArray}
+          { currentNode }
+          { children }
         </ol>
       )
-    } else {
-      this.renderTreeAsList(treeObj[k])
-        // return (
-        //   <ol>
-        //     {renderTreeAsList(treeObj[nodeName])}
-        //   </ol>
-        // )
-    }
-  })
-}
-  render () {
+    })
     return (
-  <ol>
-  <li>2018</li>
-  <ol>
-    <li>01</li>
-    <ol>
-      <li>03</li>
+      <ol>
+      { treeDisplay }
       </ol>
-  </ol>
-  <li>2017</li>
-  <ol>
-    <li>10</li>
-    <ol>
-    <li>2</li>
-      </ol>
-    </ol>
-  </ol>
     )
   }
+
+render () {
+  return (
+    this.renderTreeAsList(this.noteTreeData)
+  )
+  //   return (
+  // <ol>
+  // <li>2018</li>
+  //    <ol>
+  //    <li>01</li>
+  //    <ol>
+  //      <li>03</li>
+  //    </ol>
+  //    </ol>
+  // <li>2017</li>
+  // <ol>
+  //   <li>10</li>
+  //   <ol>
+  //   <li>2</li>
+  //     </ol>
+  //   </ol>
+  // </ol>
+  //   )
+  // }
+}
 }
 // const NoteTree = ({ noteTreeData, handleNoteClick, handleNoteContextMenu, handleDragStart, pathname }) => (
   // <div styleName={isActive
