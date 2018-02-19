@@ -20,18 +20,21 @@ class NoteTree extends React.Component {
   constructor (props) {
     super(props)
     this.noteTreeData = props.noteTreeData
-    this.state = this.initializeState(props.noteTreeData) 
+    this.state =  {
+      isOpen: false
+    // this.initializeState(props.noteTreeData) 
+    }
   }
   initializeState (treeObj) {
-    let stateTree
-    Object.keys(treeObj).map(k =>  {
-      if (Array.isArray(treeObj[k])) {
-        stateTree[k] = {'isOpen': false, children = treeObj[k]}
-      } else {
-        stateTree[k] = this.initializeState(treeObj[k])
-      }
-    })
-    this.setState({stateTree})
+    // let stateTree
+    // Object.keys(treeObj).map(k =>  {
+    //   if (Array.isArray(treeObj[k])) {
+    //     stateTree[k] = {'isOpen': false, children = treeObj[k]}
+    //   } else {
+    //     stateTree[k] = this.initializeState(treeObj[k])
+    //   }
+    // })
+    // this.setState({stateTree})
   }
   renderTreeAsList (treeObj) {
     const treeDisplay = Object.keys(treeObj).map((k) => {
@@ -100,7 +103,7 @@ class TreeNode extends React.PureComponent {
     }
   }
 
-  handleToggleButtonClick (currentState,keychain) {
+  handleToggleButtonClick (e) {
     console.log(e.target)
     this.setState({
       isOpen: !this.state.isOpen
@@ -117,7 +120,7 @@ class TreeNode extends React.PureComponent {
         })
     return (
       <ol>
-          <button styleName='header-toggleButton'
+          <button className='NoteTree' styleName='toggleButton'
                 onMouseDown={e => {this.handleToggleButtonClick(e)}}
               >
                 <img src={this.state.isOpen
@@ -127,7 +130,7 @@ class TreeNode extends React.PureComponent {
                 />
           </button>
                 {label}
-        {this.state.isOpen[] && subTreeDisplay}
+        {this.state.isOpen && subTreeDisplay}
       </ol>
     )
   //    Object.keys(treeObj).map(k => {
