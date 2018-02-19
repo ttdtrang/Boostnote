@@ -744,6 +744,7 @@ class NoteList extends React.Component {
       handleNoteClick={this.handleNoteClick.bind(this)}
       handleDragStart={this.handleDragStart.bind(this)}
       pathname={location.pathname}
+      selectedNoteKeys = {selectedNoteKeys}
       />
     )
     : notes.map(note => {

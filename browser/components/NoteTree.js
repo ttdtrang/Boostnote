@@ -5,6 +5,8 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import CSSModules from 'browser/lib/CSSModules'
 import styles from './NoteTree.styl'
+import NoteItemSimple from 'browser/components/NoteItemSimple'
+import getNoteKey from 'browser/main/NoteList'
 import { Subscription } from 'rx';
 
 /**
@@ -104,7 +106,6 @@ class TreeNode extends React.PureComponent {
   }
 
   handleToggleButtonClick (e) {
-    console.log(e.target)
     this.setState({
       isOpen: !this.state.isOpen
     })
@@ -112,8 +113,21 @@ class TreeNode extends React.PureComponent {
 
   renderNode (label, subTree) {
     const subTreeDisplay = (Array.isArray(subTree)) ? 
-      subTree.map(item =>  {
-        return ( <li>{item.title}</li>)
+      subTree.map(note =>  {
+        // const uniqueKey = getNoteKey(note)
+        
+        return ( 
+            // <NoteItemSimple
+            //     isActive={isActive}
+            //     note={note}
+            //     key={uniqueKey}
+            //     handleNoteContextMenu={this.handleNoteContextMenu.bind(this)}
+            //     handleNoteClick={this.handleNoteClick.bind(this)}
+            //     handleDragStart={this.handleDragStart.bind(this)}
+            //     pathname={location.pathname}
+            //   />
+        <li>{note.title}</li>
+      )
       })
     : Object.keys(subTree).map(k => {
         return ( this.renderNode(k, subTree[k]) )
