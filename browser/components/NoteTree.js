@@ -120,7 +120,7 @@ class TreeNode extends React.PureComponent {
         })
     return (
       <ol>
-          <button styleName='toggleButton'
+          <button className={styles['toggleButton']}
                 onMouseDown={e => {this.handleToggleButtonClick(e)}}
               >
                 <img src={this.state.isOpen
