@@ -2,19 +2,24 @@ $control-height = 30px
 $margin-level-0 = 12px
 $margin-level-1 = $margin-level-0 + 10px
 $margin-level-2 = $margin-level-1 + 10px
+$margin-level-3 = $margin-level-2 + 10px
 
 .root
   absolute left bottom
   top $topBar-height - 1
   background-color $ui-noteList-backgroundColor
 .tree
-  padding-left: 5px
-  ol > li
-    margin-left: $margin-level-0 
-  ol > ol > li
-    margin-left: $margin-level-1 
+  font-size 14px
+  padding-left 5px
+  line-height 24px
+  ol 
+    margin-left $margin-level-0 
+  ol > ol
+    margin-left $margin-level-1 
+  ol > ol > ol
+    margin-left $margin-level-2 
   ol > ol > ol > li
-    margin-left: $margin-level-2 
+    margin-left $margin-level-3
 .item-simple
   position relative
   padding 0 20px
