@@ -721,7 +721,8 @@ class NoteList extends React.Component {
     let noteTreeData = {};
     notes.forEach((note) => {
         const myDate = new Date(note.createdAt)
-        const [yyyy, mm, dd] = [myDate.getFullYear(), myDate.getMonth(), myDate.getDay()]
+        // getMonth() is zero-based
+        const [yyyy, mm, dd] = [myDate.getFullYear(), myDate.getMonth() + 1, myDate.getDate()]
         if (!noteTreeData[yyyy]) {
           noteTreeData[yyyy] = {}
           noteTreeData[yyyy][mm] = {}
