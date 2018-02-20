@@ -12,7 +12,8 @@ function defaultDataMap () {
     storageNoteMap: new Map(),
     folderNoteMap: new Map(),
     tagNoteMap: new Map(),
-    trashedSet: new Set()
+    trashedSet: new Set(),
+    treeVisibilityMap: new Map()
   }
 }
 
@@ -498,6 +499,10 @@ function data (state = defaultDataMap(), action) {
       state = Object.assign({}, state)
       state.storageMap = new Map(state.storageMap)
       state.storageMap.set(action.storage.key, action.storage)
+      return state
+    case 'TOGGLE_TREE':
+      state = Object.assign({}, state)
+      state.treeVisibilityMap[action.path] = !state.treeVisibilityMap[action.path]
       return state
   }
   return state

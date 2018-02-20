@@ -43,6 +43,33 @@ function getNoteKey (note) {
   return `${note.storage}-${note.key}`
 }
 
+function closeAll (state, treeObj, parentPath) {
+  // state is a key-value store which records the status of a given path with the following structure
+  // state = {
+  //    isOpen: {
+  //      '//2018/01/10': true,
+  //      '//2018/01': true,
+  //      '//2018': true,
+  //      '//2017/12/12': false,
+  //      '//2017/12': false,
+  //      '//2017/11/30': true,
+  //      '//2017/11': true,
+  //      '//2017': true,
+  //    }
+  //  }
+    // set isOpen = false to all
+    state.set(parentPath, false)
+    Object.keys(treeObj).map(k => {
+      let pathToMe = parentPath + '/' + k
+      state.set(pathToMe,false) 
+      if (Array.isArray(treeObj[k])) {
+        return state 
+      } else {
+        closeAll(state, treeObj[k], pathToMe)
+      }
+    })
+}
+
 class NoteList extends React.Component {
   constructor (props) {
     super(props)
@@ -739,13 +766,17 @@ class NoteList extends React.Component {
         }
         noteTreeData[yyyy][mm][dd].push(note);
     })
-    const noteList =  (config.listStyle === 'DATETREE') ? (<NoteTree
-      noteTreeData ={noteTreeData}
-      handleNoteContextMenu={this.handleNoteContextMenu.bind(this)}
-      handleNoteClick={this.handleNoteClick.bind(this)}
-      handleDragStart={this.handleDragStart.bind(this)}
-      pathname={location.pathname}
-      selectedNoteKeys = {selectedNoteKeys}
+   
+    let noteTreeIsOpen = new Map()
+    closeAll(noteTreeIsOpen,noteTreeData,'/')
+    noteTreeIsOpen.set('/', true)
+    console.log(noteTreeIsOpen)
+    const noteList =  (config.listStyle === 'DATETREE') ? (
+    <NoteTree 
+      label=''
+      fullpath='/'
+      children={noteTreeData}
+      isOpen={noteTreeIsOpen}
       />
     )
     : notes.map(note => {
