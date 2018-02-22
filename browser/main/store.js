@@ -549,7 +549,7 @@ function data (state = defaultDataMap(), action) {
       // console.log(state.treeVisibilityMap)
       state.treeVisibilityMap = new Map(state.treeVisibilityMap) 
       state.treeVisibilityMap.set(action.path, !state.treeVisibilityMap.get(action.path))
-      console.log("Toggling tree........")
+      console.log("Toggling tree at " + action.path + " to " + state.treeVisibilityMap.get(action.path))
       // console.log("After toggle")
       // console.log(state.treeVisibilityMap)
       return state

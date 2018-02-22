@@ -24,12 +24,12 @@ import { Subscription } from 'rx'
 class NoteTree extends React.Component {
   constructor (props) {
     super(props)
-    this.handleToggleButtonClick = this.handleToggleButtonClick.bind(this)
+    // this.handleToggleButtonClick = this.handleToggleButtonClick.bind(this)
   }
 
-  handleToggleButtonClick (path) {
-    this.props.handleToggleButtonClick && this.props.handleToggleButtonClick(path);
-  }
+  // handleToggleButtonClick (path) {
+  //   this.props.handleToggleButtonClick && this.props.handleToggleButtonClick(path);
+  // }
 
   render () {
     const subTree = this.props.children
@@ -59,6 +59,7 @@ class NoteTree extends React.Component {
           label={k} 
           children={subTree[k]}
           fullpath={newPath}
+          handleToggleButtonClick={this.props.handleToggleButtonClick}
           isOpen={this.props.isOpen} 
           />
         )
@@ -69,7 +70,7 @@ class NoteTree extends React.Component {
     return (
       <ol>
           <button className={styles['toggleButton']}
-                onMouseDown={e => { return this.handleToggleButtonClick(fullpath) }}
+                onMouseDown={e => { return this.props.handleToggleButtonClick(fullpath) }}
               >
                 <img src={ isOpen
                   ? '../resources/icon/icon-down.svg'
