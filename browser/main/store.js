@@ -17,6 +17,18 @@ function defaultDataMap () {
   }
 }
 
+function closeAll(state,treeObj,parentPath) {
+  state.set(parentPath, false)
+  Object.keys(treeObj).map(k => {
+    let pathToMe = parentPath + '/' + k
+    state.set(pathToMe,false) 
+    if (Array.isArray(treeObj[k])) {
+      return state 
+    } else {
+      closeAll(state, treeObj[k], pathToMe)
+    }
+  }) 
+}
 function data (state = defaultDataMap(), action) {
   switch (action.type) {
     case 'INIT_ALL':
@@ -25,6 +37,33 @@ function data (state = defaultDataMap(), action) {
       action.storages.forEach((storage) => {
         state.storageMap.set(storage.key, storage)
       })
+
+      let noteTreeData = {};
+      action.notes.forEach((note) => {
+          const myDate = new Date(note.createdAt)
+          // getMonth() is zero-based
+          const [yyyy, mm, dd] = [myDate.getFullYear(), myDate.getMonth() + 1, myDate.getDate()]
+          if (!noteTreeData[yyyy]) {
+            noteTreeData[yyyy] = {}
+            noteTreeData[yyyy][mm] = {}
+            noteTreeData[yyyy][mm][dd] = []
+          } else {
+            if (!noteTreeData[yyyy][mm]) {
+              noteTreeData[yyyy][mm] = {}
+              noteTreeData[yyyy][mm][dd] = []
+            } else {
+              if (!noteTreeData[yyyy][mm][dd]) {
+                noteTreeData[yyyy][mm][dd] = []
+              }
+            }
+          }
+          noteTreeData[yyyy][mm][dd].push(note);
+      })
+     
+      // let noteTreeIsOpen = new Map()
+      // closeAll(noteTreeIsOpen,noteTreeData,'/')
+      // noteTreeIsOpen.set('/', true)
+      // state.treeVisibilityMap = new Map(noteTreeIsOpen)
 
       action.notes.some((note) => {
         if (note === undefined) return true
@@ -62,6 +101,10 @@ function data (state = defaultDataMap(), action) {
           }
           tagNoteList.add(uniqueKey)
         })
+
+        const myDate = new Date(note.createdAt)
+        const [yyyy, mm, dd] = [myDate.getFullYear(), myDate.getMonth() + 1, myDate.getDate()]
+        state.treeVisibilityMap.set('//' + yyyy + '/'+mm+'/'+dd, false)
       })
       return state
     case 'UPDATE_NOTE':
@@ -502,7 +545,13 @@ function data (state = defaultDataMap(), action) {
       return state
     case 'TOGGLE_TREE':
       state = Object.assign({}, state)
-      state.treeVisibilityMap[action.path] = !state.treeVisibilityMap[action.path]
+      // console.log("Before toggle")
+      // console.log(state.treeVisibilityMap)
+      state.treeVisibilityMap = new Map(state.treeVisibilityMap) 
+      state.treeVisibilityMap.set(action.path, !state.treeVisibilityMap.get(action.path))
+      console.log("Toggling tree........")
+      // console.log("After toggle")
+      // console.log(state.treeVisibilityMap)
       return state
   }
   return state

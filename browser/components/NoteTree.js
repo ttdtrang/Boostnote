@@ -7,6 +7,7 @@ import CSSModules from 'browser/lib/CSSModules'
 import styles from './NoteTree.styl'
 import NoteItemSimple from 'browser/components/NoteItemSimple'
 import getNoteKey from 'browser/main/NoteList'
+import { store } from 'browser/main/store.js'
 import { connect, Provider} from 'react-redux'
 import { Subscription } from 'rx'
 
@@ -23,12 +24,17 @@ import { Subscription } from 'rx'
 class NoteTree extends React.Component {
   constructor (props) {
     super(props)
+    this.handleToggleButtonClick = this.handleToggleButtonClick.bind(this)
+  }
+
+  handleToggleButtonClick (path) {
+    this.props.handleToggleButtonClick && this.props.handleToggleButtonClick(path);
   }
 
   render () {
     const subTree = this.props.children
     const fullpath = this.props.fullpath
-    console.log(this.props)
+    console.log("this.props.isOpen = " + this.props.isOpen)
     // return (this.renderNode(this.props.label, this.props.treeData))
     const subTreeDisplay = (Array.isArray(subTree)) ? 
       subTree.map(note =>  {
@@ -47,24 +53,23 @@ class NoteTree extends React.Component {
       )
       })
     : Object.keys(subTree).map(k => {
-        console.log("where is my subtree? " + k)
         const newPath = this.props.fullpath + '/' + k
         return (
           <NoteTree className='NoteTree'
           label={k} 
           children={subTree[k]}
           fullpath={newPath}
-          isOpen={this.props.isOpen}
-          // handleToggleButtonClick={this.props.handleToggleButtonClick}
+          isOpen={this.props.isOpen} 
           />
         )
         })
-    console.log(subTreeDisplay)
-    const isOpen = this.props.isOpen.get(fullpath)
+        
+    // const isOpen = this.props.isOpen.get(fullpath)
+    const isOpen= true
     return (
       <ol>
           <button className={styles['toggleButton']}
-                onMouseDown={this.props.handleToggleButtonClick}
+                onMouseDown={e => { return this.handleToggleButtonClick(fullpath) }}
               >
                 <img src={ isOpen
                   ? '../resources/icon/icon-down.svg'
@@ -73,26 +78,21 @@ class NoteTree extends React.Component {
                 />
           </button>
                 {this.props.label}
-        { isOpen && subTreeDisplay}
+        { subTreeDisplay}
       </ol>
     )
   }
 }
 const actionToggleOpen =  path => ({type:'TOGGLE_TREE', path})
 const mapStateToProps = state => ({ isOpen: state.treeVisibilityMap});
-const mapDispatchToProps = dispatch => ({ handleToggleButtonClick: path => dispatch(actionToggleOpen(path)) });
-const ResponsiveTree = connect(mapStateToProps, mapDispatchToProps)(NoteTree);
-
-class NoteTreeContainer extends React.Component {
-  constructor (props) {
-    super(props)
-  }
-  render () {
-    return (
-        <ResponsiveTree {...this.props}/> 
-    )
+const mapDispatchToProps = dispatch => {
+  return { 
+    handleToggleButtonClick: path => dispatch(actionToggleOpen(path)) 
   }
 }
 
+ 
+const ResponsiveTree = connect(mapStateToProps, mapDispatchToProps)(NoteTree);
 
-export default CSSModules(NoteTree, styles)
+// export default CSSModules(NoteTree, styles)
+export default CSSModules(ResponsiveTree,styles)
