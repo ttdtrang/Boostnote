@@ -75,7 +75,7 @@ class SideNav extends React.Component {
     let component
 
     if (location.pathname.match('/tags') || location.pathname.match('/alltags')) {
-    // Tag mode 
+    // Tag mode
       component = (
         <div styleName='tabBody'>
           <div styleName='tag-title'>
@@ -90,10 +90,9 @@ class SideNav extends React.Component {
     // Date mode
       component = (
         <div styleName='tagBody'>
-         <p>Should show notes in hierarchy of date</p> 
+          <p>Should show notes in hierarchy of date</p>
         </div>
            )
-
     } else {
     // Folder mode
       component = (

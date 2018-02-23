@@ -17,18 +17,6 @@ function defaultDataMap () {
   }
 }
 
-function closeAll(state,treeObj,parentPath) {
-  state.set(parentPath, false)
-  Object.keys(treeObj).map(k => {
-    let pathToMe = parentPath + '/' + k
-    state.set(pathToMe,false) 
-    if (Array.isArray(treeObj[k])) {
-      return state 
-    } else {
-      closeAll(state, treeObj[k], pathToMe)
-    }
-  }) 
-}
 function data (state = defaultDataMap(), action) {
   switch (action.type) {
     case 'INIT_ALL':
@@ -38,7 +26,6 @@ function data (state = defaultDataMap(), action) {
         state.storageMap.set(storage.key, storage)
       })
 
-    
       action.notes.some((note) => {
         if (note === undefined) return true
         const uniqueKey = note.storage + '-' + note.key
@@ -76,7 +63,7 @@ function data (state = defaultDataMap(), action) {
           tagNoteList.add(uniqueKey)
         })
 
-        let noteTreeData = {};
+        const noteTreeData = {}
         action.notes.forEach((note) => {
           const myDate = new Date(note.createdAt)
           // getMonth() is zero-based
@@ -95,13 +82,10 @@ function data (state = defaultDataMap(), action) {
               }
             }
           }
-          noteTreeData[yyyy][mm][dd].push(note);
-      })
- 
-        const myDate = new Date(note.createdAt)
-        const [yyyy, mm, dd] = [myDate.getFullYear(), myDate.getMonth() + 1, myDate.getDate()]
+          noteTreeData[yyyy][mm][dd].push(note)
+        })
+
         state.treeVisibilityMap.set('/', true)
-        // state.treeVisibilityMap.set('//' + yyyy + '/'+mm+'/'+dd, false)
       })
       return state
     case 'UPDATE_NOTE':
@@ -542,7 +526,7 @@ function data (state = defaultDataMap(), action) {
       return state
     case 'TOGGLE_TREE':
       state = Object.assign({}, state)
-      state.treeVisibilityMap = new Map(state.treeVisibilityMap) 
+      state.treeVisibilityMap = new Map(state.treeVisibilityMap)
       state.treeVisibilityMap.set(action.path, !state.treeVisibilityMap.get(action.path))
       return state
   }
