@@ -24,17 +24,21 @@ import { Subscription } from 'rx'
 class NoteTree extends React.Component {
   constructor (props) {
     super(props)
+      // this.state = {
+      //   isOpen: props.isOpen ? props.isOpen : new Map()
+      // }
     // this.handleToggleButtonClick = this.handleToggleButtonClick.bind(this)
   }
 
-  // handleToggleButtonClick (path) {
-  //   this.props.handleToggleButtonClick && this.props.handleToggleButtonClick(path);
-  // }
+  handleToggleButtonClick (path) {
+    this.props.handleToggleButtonClick && this.props.handleToggleButtonClick(path);
+    // this.setState({ isOpen: this.props.isOpen})
+  }
 
   render () {
     const subTree = this.props.children
     const fullpath = this.props.fullpath
-    console.log("this.props.isOpen = " + this.props.isOpen)
+    // console.log("this.props.isOpen = " + this.props.isOpen)
     // return (this.renderNode(this.props.label, this.props.treeData))
     const subTreeDisplay = (Array.isArray(subTree)) ? 
       subTree.map(note =>  {
@@ -60,13 +64,14 @@ class NoteTree extends React.Component {
           children={subTree[k]}
           fullpath={newPath}
           handleToggleButtonClick={this.props.handleToggleButtonClick}
-          isOpen={this.props.isOpen} 
+          isOpen={this.props.isOpen}
+          // isOpen={this.state.isOpen} 
           />
         )
         })
         
-    // const isOpen = this.props.isOpen.get(fullpath)
-    const isOpen= true
+    let isOpen = this.props.isOpen.get(fullpath)
+    // console.log(this.props.isOpen)
     return (
       <ol>
           <button className={styles['toggleButton']}
@@ -78,22 +83,21 @@ class NoteTree extends React.Component {
                   }
                 />
           </button>
-                {this.props.label}
-        { subTreeDisplay}
+                { this.props.label}
+        { isOpen && subTreeDisplay}
       </ol>
     )
   }
 }
 const actionToggleOpen =  path => ({type:'TOGGLE_TREE', path})
-const mapStateToProps = state => ({ isOpen: state.treeVisibilityMap});
+const mapStateToProps = state => ({ 
+  isOpen: state.data.treeVisibilityMap,
+});
 const mapDispatchToProps = dispatch => {
   return { 
     handleToggleButtonClick: path => dispatch(actionToggleOpen(path)) 
   }
 }
 
- 
-const ResponsiveTree = connect(mapStateToProps, mapDispatchToProps)(NoteTree);
-
+export default connect(mapStateToProps, mapDispatchToProps)(CSSModules(NoteTree,styles));
 // export default CSSModules(NoteTree, styles)
-export default CSSModules(ResponsiveTree,styles)
