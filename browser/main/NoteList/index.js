@@ -767,15 +767,11 @@ class NoteList extends React.Component {
         noteTreeData[yyyy][mm][dd].push(note);
     })
    
-    // let noteTreeIsOpen = new Map()
-    // closeAll(noteTreeIsOpen,noteTreeData,'/')
-    // noteTreeIsOpen.set('/', true)
     const noteList =  (config.listStyle === 'DATETREE') ? (
      <NoteTree
        label=''
        fullpath='/'
        children={noteTreeData}
-      //  isOpen={noteTreeIsOpen}
       />
     )
     : notes.map(note => {
