@@ -6,7 +6,6 @@ import React from 'react'
 import CSSModules from 'browser/lib/CSSModules'
 import styles from './NoteTree.styl'
 import NoteItemSimple from 'browser/components/NoteItemSimple'
-import getNoteKey from 'browser/main/NoteList'
 import { store } from 'browser/main/store.js'
 import { connect, Provider} from 'react-redux'
 import { Subscription } from 'rx'
@@ -20,6 +19,10 @@ import { Subscription } from 'rx'
  * @param {Function} handleDragStart
  */
 
+
+function getNoteKey (note) {
+  return `${note.storage}-${note.key}`
+}
 
 class NoteTree extends React.Component {
   constructor () {
@@ -35,18 +38,18 @@ class NoteTree extends React.Component {
     const fullpath = this.props.fullpath
     const subTreeDisplay = (Array.isArray(subTree)) ? 
       subTree.map(note =>  {
-        // const uniqueKey = getNoteKey(note)
+        const uniqueKey = getNoteKey(note)
+        const isActive = this.props.selectedNoteKeys.includes(uniqueKey)
+        const pathname = this.props.location.pathname
+        
         return ( 
-            // <NoteItemSimple
-            //     isActive={isActive}
-            //     note={note}
-            //     key={uniqueKey}
-            //     handleNoteContextMenu={this.handleNoteContextMenu.bind(this)}
-            //     handleNoteClick={this.handleNoteClick.bind(this)}
-            //     handleDragStart={this.handleDragStart.bind(this)}
-            //     pathname={location.pathname}
-            //   />
-        <li>{note.title}</li>
+            <NoteItemSimple
+                isActive={isActive}
+                note={note}
+                key={uniqueKey}
+                handleNoteClick={this.props.handleNoteClick}
+                pathname={pathname}
+            />
       )
       })
     : Object.keys(subTree).map(k => {
@@ -58,6 +61,9 @@ class NoteTree extends React.Component {
           fullpath={newPath}
           handleToggleButtonClick={this.props.handleToggleButtonClick}
           isOpen={this.props.isOpen}
+          selectedNoteKeys={this.props.selectedNoteKeys}
+          location={this.props.location}
+          handleNoteClick={this.props.handleNoteClick}
           />
         )
         })

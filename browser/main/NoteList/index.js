@@ -742,11 +742,12 @@ class NoteList extends React.Component {
    
     const noteList =  (config.listStyle === 'DATETREE') ? (
      <NoteTree
-       label=''
-       fullpath='/'
-       children={noteTreeData}
-       selectedNoteKeys={this.state.selectedNoteKeys}
-       location={this.props.location}
+        label=''
+        fullpath='/'
+        children={noteTreeData}
+        selectedNoteKeys={this.state.selectedNoteKeys}
+        location={this.props.location}
+        handleNoteClick={this.handleNoteClick.bind(this)}
       />
     )
     : notes.map(note => {
