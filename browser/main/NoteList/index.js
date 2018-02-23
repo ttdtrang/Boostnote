@@ -43,33 +43,6 @@ function getNoteKey (note) {
   return `${note.storage}-${note.key}`
 }
 
-function closeAll (state, treeObj, parentPath) {
-  // state is a key-value store which records the status of a given path with the following structure
-  // state = {
-  //    isOpen: {
-  //      '//2018/01/10': true,
-  //      '//2018/01': true,
-  //      '//2018': true,
-  //      '//2017/12/12': false,
-  //      '//2017/12': false,
-  //      '//2017/11/30': true,
-  //      '//2017/11': true,
-  //      '//2017': true,
-  //    }
-  //  }
-    // set isOpen = false to all
-    state.set(parentPath, false)
-    Object.keys(treeObj).map(k => {
-      let pathToMe = parentPath + '/' + k
-      state.set(pathToMe,false) 
-      if (Array.isArray(treeObj[k])) {
-        return state 
-      } else {
-        closeAll(state, treeObj[k], pathToMe)
-      }
-    })
-}
-
 class NoteList extends React.Component {
   constructor (props) {
     super(props)
@@ -772,6 +745,8 @@ class NoteList extends React.Component {
        label=''
        fullpath='/'
        children={noteTreeData}
+       selectedNoteKeys={this.state.selectedNoteKeys}
+       location={this.props.location}
       />
     )
     : notes.map(note => {
