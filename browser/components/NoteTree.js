@@ -27,7 +27,7 @@ class NoteTree extends React.Component {
   }
 
   render () {
-    const subTree = this.props.children
+    const subTree = this.props.subTree
     const fullpath = this.props.fullpath
     const subTreeDisplay = (Array.isArray(subTree))
       ? subTree.map(note => {
@@ -50,7 +50,7 @@ class NoteTree extends React.Component {
         return (
           <NoteTree className='NoteTree'
             label={k}
-            childenNode={subTree[k]}
+            subTree={subTree[k]}
             fullpath={newPath}
             key={newPath}
             handleToggleButtonClick={this.props.handleToggleButtonClick}

@@ -755,7 +755,7 @@ class NoteList extends React.Component {
         label=''
         fullpath='/'
         key='/'
-        childrenNode={noteTreeData}
+        subTree={noteTreeData}
         selectedNoteKeys={this.state.selectedNoteKeys}
         location={this.props.location}
         handleNoteClick={this.handleNoteClick.bind(this)}
