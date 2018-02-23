@@ -110,14 +110,27 @@ class NoteList extends React.Component {
 
   componentDidUpdate (prevProps) {
     const { location } = this.props
+    const { selectedNoteKeys } = this.state
+    const visibleNoteKeys = this.notes.map(note => `${note.storage}-${note.key}`)
+    const note = this.notes[0]
+    const prevKey = prevProps.location.query.key
+    const noteKey = visibleNoteKeys.includes(prevKey) ? prevKey : note && `${note.storage}-${note.key}`
 
-    if (this.notes.length > 0 && location.query.key == null) {
+    if (note && location.query.key == null) {
       const { router } = this.context
       if (!location.pathname.match(/\/searched/)) this.contextNotes = this.getContextNotes()
+
+      // A visible note is an active note
+      if (!selectedNoteKeys.includes(noteKey)) {
+        if (selectedNoteKeys.length === 1) selectedNoteKeys.pop()
+        selectedNoteKeys.push(noteKey)
+        ee.emit('list:moved')
+      }
+
       router.replace({
         pathname: location.pathname,
         query: {
-          key: this.notes[0].storage + '-' + this.notes[0].key
+          key: noteKey
         }
       })
       return
@@ -443,7 +456,7 @@ class NoteList extends React.Component {
     const cloneNote = 'Clone Note'
 
     const menu = new Menu()
-    if (!location.pathname.match(/\/home|\/starred|\/trash/)) {
+    if (!location.pathname.match(/\/starred|\/trash/)) {
       menu.append(new MenuItem({
         label: pinLabel,
         click: this.pinToTop
@@ -688,7 +701,7 @@ class NoteList extends React.Component {
       : config.sortBy === 'ALPHABETICAL'
       ? sortByAlphabetical
       : sortByUpdatedAt
-    const sortedNotes = location.pathname.match(/\/home|\/starred|\/trash/)
+    const sortedNotes = location.pathname.match(/\/starred|\/trash/)
         ? this.getNotes().sort(sortFunc)
         : this.sortByPin(this.getNotes().sort(sortFunc))
     this.notes = notes = sortedNotes.filter((note) => {
@@ -800,16 +813,17 @@ class NoteList extends React.Component {
           <div styleName='control-sortBy'>
             <i className='fa fa-angle-down' />
             <select styleName='control-sortBy-select'
+              title='Select filter mode'
               value={config.sortBy}
               onChange={(e) => this.handleSortByChange(e)}
             >
-              <option value='UPDATED_AT'>Updated</option>
-              <option value='CREATED_AT'>Created</option>
-              <option value='ALPHABETICAL'>Alphabetically</option>
+              <option title='Sort by update time' value='UPDATED_AT'>Updated</option>
+              <option title='Sort by create time' value='CREATED_AT'>Created</option>
+              <option title='Sort alphabetically' value='ALPHABETICAL'>Alphabetically</option>
             </select>
           </div>
           <div styleName='control-button-area'>
-            <button styleName={config.listStyle === 'DATETREE'
+            <button title='Tree View' styleName={config.listStyle === 'DATETREE'
                 ? 'control-button--active'
                 : 'control-button'
               }
@@ -817,7 +831,7 @@ class NoteList extends React.Component {
             >
               <img styleName='iconTag' src='../resources/icon/icon-column-tree.svg' />
             </button>
-            <button styleName={config.listStyle === 'DEFAULT'
+            <button title='Default View' styleName={config.listStyle === 'DEFAULT'
                 ? 'control-button--active'
                 : 'control-button'
               }
@@ -825,7 +839,7 @@ class NoteList extends React.Component {
             >
               <img styleName='iconTag' src='../resources/icon/icon-column.svg' />
             </button>
-            <button styleName={config.listStyle === 'SMALL'
+            <button title='Compressed View' styleName={config.listStyle === 'SMALL'
                 ? 'control-button--active'
                 : 'control-button'
               }
