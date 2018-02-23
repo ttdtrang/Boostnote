@@ -38,33 +38,7 @@ function data (state = defaultDataMap(), action) {
         state.storageMap.set(storage.key, storage)
       })
 
-      let noteTreeData = {};
-      action.notes.forEach((note) => {
-          const myDate = new Date(note.createdAt)
-          // getMonth() is zero-based
-          const [yyyy, mm, dd] = [myDate.getFullYear(), myDate.getMonth() + 1, myDate.getDate()]
-          if (!noteTreeData[yyyy]) {
-            noteTreeData[yyyy] = {}
-            noteTreeData[yyyy][mm] = {}
-            noteTreeData[yyyy][mm][dd] = []
-          } else {
-            if (!noteTreeData[yyyy][mm]) {
-              noteTreeData[yyyy][mm] = {}
-              noteTreeData[yyyy][mm][dd] = []
-            } else {
-              if (!noteTreeData[yyyy][mm][dd]) {
-                noteTreeData[yyyy][mm][dd] = []
-              }
-            }
-          }
-          noteTreeData[yyyy][mm][dd].push(note);
-      })
-     
-      // let noteTreeIsOpen = new Map()
-      // closeAll(noteTreeIsOpen,noteTreeData,'/')
-      // noteTreeIsOpen.set('/', true)
-      // state.treeVisibilityMap = new Map(noteTreeIsOpen)
-
+    
       action.notes.some((note) => {
         if (note === undefined) return true
         const uniqueKey = note.storage + '-' + note.key
@@ -102,9 +76,32 @@ function data (state = defaultDataMap(), action) {
           tagNoteList.add(uniqueKey)
         })
 
+        let noteTreeData = {};
+        action.notes.forEach((note) => {
+          const myDate = new Date(note.createdAt)
+          // getMonth() is zero-based
+          const [yyyy, mm, dd] = [myDate.getFullYear(), myDate.getMonth() + 1, myDate.getDate()]
+          if (!noteTreeData[yyyy]) {
+            noteTreeData[yyyy] = {}
+            noteTreeData[yyyy][mm] = {}
+            noteTreeData[yyyy][mm][dd] = []
+          } else {
+            if (!noteTreeData[yyyy][mm]) {
+              noteTreeData[yyyy][mm] = {}
+              noteTreeData[yyyy][mm][dd] = []
+            } else {
+              if (!noteTreeData[yyyy][mm][dd]) {
+                noteTreeData[yyyy][mm][dd] = []
+              }
+            }
+          }
+          noteTreeData[yyyy][mm][dd].push(note);
+      })
+ 
         const myDate = new Date(note.createdAt)
         const [yyyy, mm, dd] = [myDate.getFullYear(), myDate.getMonth() + 1, myDate.getDate()]
-        state.treeVisibilityMap.set('//' + yyyy + '/'+mm+'/'+dd, false)
+        state.treeVisibilityMap.set('/', true)
+        // state.treeVisibilityMap.set('//' + yyyy + '/'+mm+'/'+dd, false)
       })
       return state
     case 'UPDATE_NOTE':
@@ -547,7 +544,6 @@ function data (state = defaultDataMap(), action) {
       state = Object.assign({}, state)
       state.treeVisibilityMap = new Map(state.treeVisibilityMap) 
       state.treeVisibilityMap.set(action.path, !state.treeVisibilityMap.get(action.path))
-      console.log("Toggling tree at " + action.path + " to " + state.treeVisibilityMap.get(action.path))
       return state
   }
   return state

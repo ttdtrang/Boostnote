@@ -64,7 +64,7 @@ class NoteTree extends React.Component {
         
     const isOpen = this.props.isOpen.get(fullpath)
     return (
-      <ol>
+      <ol className='NoteTree' styleName='tree'>
           <button className={styles['toggleButton']}
                 onMouseDown={e => { return this.props.handleToggleButtonClick(fullpath) }}
               >
