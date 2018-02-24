@@ -7,7 +7,7 @@ import ee from 'browser/main/lib/eventEmitter'
 import ModalEscButton from 'browser/components/ModalEscButton'
 import AwsMobileAnalyticsConfig from 'browser/main/lib/AwsMobileAnalyticsConfig'
 
-class NewNoteModal extends React.Component {
+class NewJournalEntryModal extends React.Component {
   constructor (props) {
     super(props)
 
@@ -15,86 +15,8 @@ class NewNoteModal extends React.Component {
     }
   }
 
-  componentDidMount () {
-    this.refs.markdownButton.focus()
-  }
-
   handleCloseButtonClick (e) {
     this.props.close()
-  }
-
-  handleMarkdownNoteButtonClick (e) {
-    AwsMobileAnalyticsConfig.recordDynamicCustomEvent('ADD_MARKDOWN')
-    AwsMobileAnalyticsConfig.recordDynamicCustomEvent('ADD_ALLNOTE')
-    const { storage, folder, dispatch, location } = this.props
-    dataApi
-      .createNote(storage, {
-        type: 'MARKDOWN_NOTE',
-        folder: folder,
-        title: '',
-        content: ''
-      })
-      .then((note) => {
-        const noteHash = `${note.storage}-${note.key}`
-        dispatch({
-          type: 'UPDATE_NOTE',
-          note: note
-        })
-        hashHistory.push({
-          pathname: location.pathname,
-          query: {key: noteHash}
-        })
-        ee.emit('list:jump', noteHash)
-        ee.emit('detail:focus')
-        this.props.close()
-      })
-  }
-
-  handleMarkdownNoteButtonKeyDown (e) {
-    if (e.keyCode === 9) {
-      e.preventDefault()
-      this.refs.snippetButton.focus()
-    }
-  }
-
-  handleSnippetNoteButtonClick (e) {
-    AwsMobileAnalyticsConfig.recordDynamicCustomEvent('ADD_SNIPPET')
-    AwsMobileAnalyticsConfig.recordDynamicCustomEvent('ADD_ALLNOTE')
-    const { storage, folder, dispatch, location } = this.props
-
-    dataApi
-      .createNote(storage, {
-        type: 'SNIPPET_NOTE',
-        folder: folder,
-        title: '',
-        description: '',
-        snippets: [{
-          name: '',
-          mode: 'text',
-          content: ''
-        }]
-      })
-      .then((note) => {
-        const noteHash = `${note.storage}-${note.key}`
-        dispatch({
-          type: 'UPDATE_NOTE',
-          note: note
-        })
-        hashHistory.push({
-          pathname: location.pathname,
-          query: {key: noteHash}
-        })
-        ee.emit('list:jump', noteHash)
-        ee.emit('detail:focus')
-        this.props.close()
-      })
-  }
-
-  handleSnippetNoteButtonKeyDown (e) {
-    if (e.keyCode === 9) {
-      e.preventDefault()
-      this.refs.markdownButton.focus()
-    }
   }
 
   handleJournalNoteButtonClick (e) {
@@ -122,7 +44,7 @@ class NewNoteModal extends React.Component {
       console.log('bring me to that one - ' + noteMap.get(noteFoundOnThisDate).createdAt)
       // console.log(noteMap.get(noteFoundOnThisDate))
     } else {
-      console.log('create new note for ' + targetDate)
+      console.log('TODO: create new note for ' + targetDate)
     }
     this.props.close()
   }
@@ -147,11 +69,11 @@ class NewNoteModal extends React.Component {
         onKeyDown={(e) => this.handleKeyDown(e)}
       >
         <div styleName='header'>
-          <div styleName='title'>Make a note</div>
+          <div styleName='title'>Pick a date</div>
         </div>
         <ModalEscButton handleEscButtonClick={(e) => this.handleCloseButtonClick(e)} />
         <div styleName='control'>
-          {/* <button styleName='control-button'
+          <button styleName='control-button'
             onClick={(e) => this.handleJournalNoteButtonClick(e)}
             onKeyDown={(e) => this.handleJournalNoteButtonKeyDown(e)}
             ref='journalButton'
@@ -161,9 +83,9 @@ class NewNoteModal extends React.Component {
             /><br />
             <span styleName='control-button-label'>Journal Entry</span><br />
             <span styleName='control-button-description'>Generating a journal entry for today, in Markdown format.</span>
-          </button> */}
+          </button>
 
-          <button styleName='control-button'
+          {/* <button styleName='control-button'
             onClick={(e) => this.handleMarkdownNoteButtonClick(e)}
             onKeyDown={(e) => this.handleMarkdownNoteButtonKeyDown(e)}
             ref='markdownButton'
@@ -173,9 +95,9 @@ class NewNoteModal extends React.Component {
             /><br />
             <span styleName='control-button-label'>Markdown Note</span><br />
             <span styleName='control-button-description'>This format is for creating text documents. Checklists, code blocks and Latex blocks are available.</span>
-          </button>
+          </button> */}
 
-          <button styleName='control-button'
+          {/* <button styleName='control-button'
             onClick={(e) => this.handleSnippetNoteButtonClick(e)}
             onKeyDown={(e) => this.handleSnippetNoteButtonKeyDown(e)}
             ref='snippetButton'
@@ -186,7 +108,7 @@ class NewNoteModal extends React.Component {
             <span styleName='control-button-label'>Snippet Note</span><br />
             <span styleName='control-button-description'>This format is for creating code snippets. Multiple snippets can be grouped into a single note.
             </span>
-          </button>
+          </button> */}
 
         </div>
         <div styleName='description'><i className='fa fa-arrows-h' /> Tab to switch format</div>
@@ -196,7 +118,7 @@ class NewNoteModal extends React.Component {
   }
 }
 
-NewNoteModal.propTypes = {
+NewJournalEntryModal.propTypes = {
 }
 
-export default CSSModules(NewNoteModal, styles)
+export default CSSModules(NewJournalEntryModal, styles)
