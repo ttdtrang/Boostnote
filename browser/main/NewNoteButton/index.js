@@ -15,7 +15,6 @@ const OSX = window.process.platform === 'darwin'
 class NewNoteButton extends React.Component {
   constructor (props) {
     super(props)
-
     this.state = {
     }
 
@@ -33,12 +32,14 @@ class NewNoteButton extends React.Component {
   }
 
   handleNewNoteButtonClick (e) {
-    const { location, dispatch } = this.props
+    const { location, dispatch, data } = this.props
     const { storage, folder } = this.resolveTargetFolder()
 
     modal.open(NewNoteModal, {
       storage: storage.key,
       folder: folder.key,
+      folderNoteMap: data.folderNoteMap,
+      noteMap: data.noteMap,
       dispatch,
       location
     })
@@ -47,7 +48,6 @@ class NewNoteButton extends React.Component {
   resolveTargetFolder () {
     const { data, params } = this.props
     let storage = data.storageMap.get(params.storageKey)
-
     // Find first storage
     if (storage == null) {
       for (const kv of data.storageMap) {

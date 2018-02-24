@@ -97,6 +97,43 @@ class NewNoteModal extends React.Component {
     }
   }
 
+  handleJournalNoteButtonClick (e) {
+    AwsMobileAnalyticsConfig.recordDynamicCustomEvent('ADD_MARKDOWN')
+    AwsMobileAnalyticsConfig.recordDynamicCustomEvent('ADD_ALLNOTE')
+    const { storage, folder, dispatch, location, folderNoteMap, noteMap } = this.props
+    const targetDate = new Date() // TODO get from date picker
+    // TODO make sure the current folder is of type JOURNAL
+    const notesInSameFolder = folderNoteMap.get(storage + '-' + folder)
+    let noteFoundOnThisDate
+    if (notesInSameFolder) {
+      for (const uniqueKey of notesInSameFolder) {
+        const note = noteMap.get(uniqueKey)
+        const theDate = new Date(note.createdAt)
+        if (theDate.getFullYear() === targetDate.getFullYear() &&
+          theDate.getMonth() === targetDate.getMonth() &&
+          theDate.getDate() === targetDate.getDate()
+        ) {
+          noteFoundOnThisDate = uniqueKey
+          break
+        }
+      }
+    }
+    if (noteFoundOnThisDate) {
+      console.log('bring me to that one - ' + noteMap.get(noteFoundOnThisDate).createdAt)
+      // console.log(noteMap.get(noteFoundOnThisDate))
+    } else {
+      console.log('create new note for ' + targetDate)
+    }
+    this.props.close()
+  }
+
+  handleJournalNoteButtonKeyDown (e) {
+    if (e.keyCode === 9) {
+      e.preventDefault()
+      this.refs.journalButton.focus()
+    }
+  }
+
   handleKeyDown (e) {
     if (e.keyCode === 27) {
       this.props.close()
@@ -114,6 +151,18 @@ class NewNoteModal extends React.Component {
         </div>
         <ModalEscButton handleEscButtonClick={(e) => this.handleCloseButtonClick(e)} />
         <div styleName='control'>
+          <button styleName='control-button'
+            onClick={(e) => this.handleJournalNoteButtonClick(e)}
+            onKeyDown={(e) => this.handleJournalNoteButtonKeyDown(e)}
+            ref='journalButton'
+          >
+            <i styleName='control-button-icon'
+              className='fa fa-calendar-o'
+            /><br />
+            <span styleName='control-button-label'>Journal Entry</span><br />
+            <span styleName='control-button-description'>Generating a journal entry for today, in Markdown format.</span>
+          </button>
+
           <button styleName='control-button'
             onClick={(e) => this.handleMarkdownNoteButtonClick(e)}
             onKeyDown={(e) => this.handleMarkdownNoteButtonKeyDown(e)}
