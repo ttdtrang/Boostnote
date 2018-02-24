@@ -21,40 +21,47 @@ import _ from 'lodash'
  * @return {React.Component}
  */
 const StorageItem = ({
-  isActive, handleButtonClick, handleContextMenu, folderName,
+  isActive, handleButtonClick, handleContextMenu, folderName, folderType,
   folderColor, isFolded, noteCount, handleDrop, handleDragEnter, handleDragLeave
-}) => (
-  <button styleName={isActive
-      ? 'folderList-item--active'
-      : 'folderList-item'
-    }
-    onClick={handleButtonClick}
-    onContextMenu={handleContextMenu}
-    onDrop={handleDrop}
-    onDragEnter={handleDragEnter}
-    onDragLeave={handleDragLeave}
-  >
-    <span styleName={isFolded
-      ? 'folderList-item-name--folded' : 'folderList-item-name'
-    }>
-      <text style={{color: folderColor, paddingRight: '10px'}}>{isActive ? <i className='fa fa-folder-open-o' /> : <i className='fa fa-folder-o' />}</text>{isFolded ? _.truncate(folderName, {length: 1, omission: ''}) : folderName}
-    </span>
-    {(!isFolded && _.isNumber(noteCount)) &&
-      <span styleName='folderList-item-noteCount'>{noteCount}</span>
-    }
-    {isFolded &&
-      <span styleName='folderList-item-tooltip'>
-        {folderName}
+}) => {
+  const folderIcon = (folderType === 'JOURNAL')
+  ? (<i className='fa fa-calendar-o' />)
+  : (isActive ? (<i className='fa fa-folder-open-o' />) : (<i className='fa fa-folder-o' />))
+
+  return (
+    <button styleName={isActive
+        ? 'folderList-item--active'
+        : 'folderList-item'
+      }
+      onClick={handleButtonClick}
+      onContextMenu={handleContextMenu}
+      onDrop={handleDrop}
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
+    >
+      <span styleName={isFolded
+        ? 'folderList-item-name--folded' : 'folderList-item-name'
+      }>
+        <text style={{color: folderColor, paddingRight: '10px'}}>{folderIcon}</text>{isFolded ? _.truncate(folderName, {length: 1, omission: ''}) : folderName}
       </span>
-    }
-  </button>
-)
+      {(!isFolded && _.isNumber(noteCount)) &&
+        <span styleName='folderList-item-noteCount'>{noteCount}</span>
+      }
+      {isFolded &&
+        <span styleName='folderList-item-tooltip'>
+          {folderName}
+        </span>
+      }
+    </button>
+  )
+}
 
 StorageItem.propTypes = {
   isActive: PropTypes.bool.isRequired,
   handleButtonClick: PropTypes.func,
   handleContextMenu: PropTypes.func,
   folderName: PropTypes.string.isRequired,
+  folderType: PropTypes.string.isRequired,
   folderColor: PropTypes.string,
   isFolded: PropTypes.bool.isRequired,
   handleDragEnter: PropTypes.func.isRequired,

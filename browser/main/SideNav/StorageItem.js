@@ -256,6 +256,7 @@ class StorageItem extends React.Component {
           handleButtonClick={(e) => this.handleFolderButtonClick(folder.key)(e)}
           handleContextMenu={(e) => this.handleFolderButtonContextMenu(e, folder)}
           folderName={folder.name}
+          folderType={folder.type}
           folderColor={folder.color}
           isFolded={isFolded}
           noteCount={noteCount}

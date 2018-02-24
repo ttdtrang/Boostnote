@@ -13,7 +13,8 @@ class CreateFolderModal extends React.Component {
     super(props)
 
     this.state = {
-      name: ''
+      name: '',
+      type: 'COLLECTION'  // COLLECTION or JOURNAL
     }
   }
 
@@ -26,10 +27,17 @@ class CreateFolderModal extends React.Component {
     this.props.close()
   }
 
+  handleTypeChange (folderType) {
+    const newState = Object.assign({}, this.state)
+    newState.type = folderType
+    this.setState(newState)
+    console.log(folderType)
+  }
+
   handleChange (e) {
-    this.setState({
-      name: this.refs.name.value
-    })
+    const newState = Object.assign({}, this.state)
+    newState.name = this.refs.name.value
+    this.setState(newState)
   }
 
   handleKeyDown (e) {
@@ -55,6 +63,7 @@ class CreateFolderModal extends React.Component {
       const { storage } = this.props
       const input = {
         name: this.state.name.trim(),
+        type: this.state.type,
         color: consts.FOLDER_COLORS[Math.floor(Math.random() * 7) % 7]
       }
 
@@ -91,6 +100,13 @@ class CreateFolderModal extends React.Component {
               onChange={(e) => this.handleChange(e)}
               onKeyDown={(e) => this.handleInputKeyDown(e)}
             />
+            <div styleName='control-folder-label'>Folder type</div>
+            <button styleName={this.state.type === 'COLLECTION' ? 'button-folderType--active' : 'button-folderType'}
+              onClick={(e) => this.handleTypeChange('COLLECTION')}>Collection
+            </button>
+            <button styleName={this.state.type === 'JOURNAL' ? 'button-folderType--active' : 'button-folderType'}
+              onClick={(e) => this.handleTypeChange('JOURNAL')}>Journal
+            </button>
           </div>
           <button styleName='control-confirmButton'
             onClick={(e) => this.handleConfirmButtonClick(e)}
