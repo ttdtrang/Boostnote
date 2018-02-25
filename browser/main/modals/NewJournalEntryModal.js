@@ -6,12 +6,14 @@ import { hashHistory } from 'react-router'
 import ee from 'browser/main/lib/eventEmitter'
 import ModalEscButton from 'browser/components/ModalEscButton'
 import AwsMobileAnalyticsConfig from 'browser/main/lib/AwsMobileAnalyticsConfig'
+import DatePicker from 'browser/components/DatePicker.js'
 
 class NewJournalEntryModal extends React.Component {
   constructor (props) {
     super(props)
 
     this.state = {
+      selectedDate: new Date()
     }
   }
 
@@ -19,14 +21,23 @@ class NewJournalEntryModal extends React.Component {
     this.props.close()
   }
 
-  handleJournalNoteButtonClick (e) {
+  handleDayFocus (day) {
+    this.setState({selectedDate: day})
+    console.log(day)
+  }
+
+  handleDayMouseEnter (day) {
+    console.log(day)
+  }
+
+  handleDayMouseDown (day) {
+    const targetDate = this.state.selectedDate
+    const JOURNAL_TITLE = targetDate.toDateString({ weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
     AwsMobileAnalyticsConfig.recordDynamicCustomEvent('ADD_MARKDOWN')
     AwsMobileAnalyticsConfig.recordDynamicCustomEvent('ADD_ALLNOTE')
     const { storage, folder, dispatch, location, folderNoteMap, noteMap } = this.props
-    const targetDate = new Date() // TODO get from date picker
-    // TODO make sure the current folder is of type JOURNAL
     const notesInSameFolder = folderNoteMap.get(storage + '-' + folder)
-    let noteFoundOnThisDate
+    let noteFoundOnThisDate // TODO and not in trash
     if (notesInSameFolder) {
       for (const uniqueKey of notesInSameFolder) {
         const note = noteMap.get(uniqueKey)
@@ -41,24 +52,39 @@ class NewJournalEntryModal extends React.Component {
       }
     }
     if (noteFoundOnThisDate) {
+      // TODO: may need another field to record journal entry date. maybe title?
       console.log('bring me to that one - ' + noteMap.get(noteFoundOnThisDate).createdAt)
       // console.log(noteMap.get(noteFoundOnThisDate))
     } else {
-      console.log('TODO: create new note for ' + targetDate)
+      console.log('create new note for ' + targetDate)
+      // dataApi
+      // .createNote(storage, {
+      //   type: 'MARKDOWN_NOTE',
+      //   folder: folder,
+      //   title: targetDate.getDate(),
+      //   content: '# ' + JOURNAL_TITLE
+      // })
+      // .then((note) => {
+      //   const noteHash = `${note.storage}-${note.key}`
+      //   dispatch({
+      //     type: 'UPDATE_NOTE',
+      //     note: note
+      //   })
+      //   hashHistory.push({
+      //     pathname: location.pathname,
+      //     query: {key: noteHash}
+      //   })
+      //   ee.emit('list:jump', noteHash)
+      //   ee.emit('detail:focus')
+      // })
     }
-    this.props.close()
+    // this.props.close()
   }
 
-  handleJournalNoteButtonKeyDown (e) {
-    if (e.keyCode === 9) {
-      e.preventDefault()
-      this.refs.journalButton.focus()
-    }
-  }
-
-  handleKeyDown (e) {
+  handleKeyUp (e) {
     if (e.keyCode === 27) {
-      this.props.close()
+      console.log(e)
+      // this.props.close()
     }
   }
 
@@ -66,53 +92,18 @@ class NewJournalEntryModal extends React.Component {
     return (
       <div styleName='root'
         tabIndex='-1'
-        onKeyDown={(e) => this.handleKeyDown(e)}
+        onKeyUp={(e) => this.handleKeyUp(e)}
       >
-        <div styleName='header'>
-          <div styleName='title'>Pick a date</div>
-        </div>
+        <div styleName='header'> <div styleName='title'>Pick a date</div> </div>
         <ModalEscButton handleEscButtonClick={(e) => this.handleCloseButtonClick(e)} />
-        <div styleName='control'>
-          <button styleName='control-button'
-            onClick={(e) => this.handleJournalNoteButtonClick(e)}
-            onKeyDown={(e) => this.handleJournalNoteButtonKeyDown(e)}
-            ref='journalButton'
-          >
-            <i styleName='control-button-icon'
-              className='fa fa-calendar-o'
-            /><br />
-            <span styleName='control-button-label'>Journal Entry</span><br />
-            <span styleName='control-button-description'>Generating a journal entry for today, in Markdown format.</span>
-          </button>
-
-          {/* <button styleName='control-button'
-            onClick={(e) => this.handleMarkdownNoteButtonClick(e)}
-            onKeyDown={(e) => this.handleMarkdownNoteButtonKeyDown(e)}
-            ref='markdownButton'
-          >
-            <i styleName='control-button-icon'
-              className='fa fa-file-text-o'
-            /><br />
-            <span styleName='control-button-label'>Markdown Note</span><br />
-            <span styleName='control-button-description'>This format is for creating text documents. Checklists, code blocks and Latex blocks are available.</span>
-          </button> */}
-
-          {/* <button styleName='control-button'
-            onClick={(e) => this.handleSnippetNoteButtonClick(e)}
-            onKeyDown={(e) => this.handleSnippetNoteButtonKeyDown(e)}
-            ref='snippetButton'
-          >
-            <i styleName='control-button-icon'
-              className='fa fa-code'
-            /><br />
-            <span styleName='control-button-label'>Snippet Note</span><br />
-            <span styleName='control-button-description'>This format is for creating code snippets. Multiple snippets can be grouped into a single note.
-            </span>
-          </button> */}
-
+        <div>
+        {/* <DatePicker
+          onDayFocus={(d) => { this.handleDayFocus(d) }}
+          onDayMouseDown={(d) => { this.handleDayMouseDown(d) }} 
+          onDayMouseEnter={(d) => {this.handleDayMouseEnter(d)}}
+          selectedDays={this.state.selectedDate}
+          /> */}
         </div>
-        <div styleName='description'><i className='fa fa-arrows-h' /> Tab to switch format</div>
-
       </div>
     )
   }

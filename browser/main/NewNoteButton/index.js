@@ -89,8 +89,13 @@ class NewNoteButton extends React.Component {
   resolveFolderType () {
     const { data, params } = this.props
     const storage = data.storageMap.get(params.storageKey)
-    const folder = (storage && _.find(storage.folders, {key: params.folderKey}) || storage.folders[0])
-    return (folder && folder.type)
+    let folder
+    if (storage) {
+      folder = _.find(storage.folders, {key: params.folderKey}) || storage.folders[0]
+      return folder.type
+    } else {
+      return null
+    }
   }
 
   render () {
