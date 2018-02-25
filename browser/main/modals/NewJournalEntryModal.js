@@ -17,6 +17,10 @@ class NewJournalEntryModal extends React.Component {
     }
   }
 
+  componentDidMount () {
+    this.refs.rootDiv.focus()
+  }
+
   handleCloseButtonClick (e) {
     this.props.close()
   }
@@ -27,7 +31,7 @@ class NewJournalEntryModal extends React.Component {
   }
 
   handleDayMouseEnter (day) {
-    console.log(day)
+    // console.log(day)
   }
 
   handleDayMouseDown (day) {
@@ -81,10 +85,9 @@ class NewJournalEntryModal extends React.Component {
     // this.props.close()
   }
 
-  handleKeyUp (e) {
+  handleKeyDown (e) {
     if (e.keyCode === 27) {
-      console.log(e)
-      // this.props.close()
+      this.props.close()
     }
   }
 
@@ -92,18 +95,18 @@ class NewJournalEntryModal extends React.Component {
     return (
       <div styleName='root'
         tabIndex='-1'
-        onKeyUp={(e) => this.handleKeyUp(e)}
+        onKeyDown={(e) => this.handleKeyDown(e)}
+        ref='rootDiv'
       >
         <div styleName='header'> <div styleName='title'>Pick a date</div> </div>
         <ModalEscButton handleEscButtonClick={(e) => this.handleCloseButtonClick(e)} />
         <div>
-        {/* <DatePicker
+        <DatePicker
           onDayFocus={(d) => { this.handleDayFocus(d) }}
-          onDayMouseDown={(d) => { this.handleDayMouseDown(d) }} 
-          onDayMouseEnter={(d) => {this.handleDayMouseEnter(d)}}
+          onDayMouseDown={(d) => { this.handleDayMouseDown(d) }}
           selectedDays={this.state.selectedDate}
-          /> */}
-        </div>
+          />
+          </div>
       </div>
     )
   }
