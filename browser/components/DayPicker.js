@@ -46,14 +46,14 @@ class DayPicker extends React.Component {
   }
 
   handlePreviousMonth () {
-    const month = this.month.subtract(1, 'month')
+    const month = this.state.month.subtract(1, 'month')
     this.setState({
       month,
       keyPrefix: month.format('YYYY.MM')
     })
   }
   handleNextMonth () {
-    const month = this.month.add(1, 'month')
+    const month = this.state.month.add(1, 'month')
     this.setState({
       month,
       keyPrefix: month.format('YYYY.MM')
@@ -118,13 +118,13 @@ class DayPicker extends React.Component {
     })
 
     return (
-      <div className='react-daypicker-root'>
-        <div className='header'>
-          <div className='previous-month' onClick={() => { this.handlePreviousMonth() }}>◀</div>
-          <div className='month-year'>{this.state.month.format('MMMM YYYY')}</div>
-          <div className='next-month' onClick={() => { this.handleNextMonth() }}>▶</div>
+      <div className='DayPicker' styleName='root'>
+        <div styleName='header'>
+          <div styleName='previous-month' onClick={() => { this.handlePreviousMonth() }}>◀</div>
+          <div styleName='month-year'>{this.state.month.format('MMMM YYYY')}</div>
+          <div styleName='next-month' onClick={() => { this.handleNextMonth() }}>▶</div>
         </div>
-        <table>
+        <table className='DayPicker'>
           <thead>
             <tr>
               <th scope='col'>
