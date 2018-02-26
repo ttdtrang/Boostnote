@@ -6,7 +6,7 @@ import { hashHistory } from 'react-router'
 import ee from 'browser/main/lib/eventEmitter'
 import ModalEscButton from 'browser/components/ModalEscButton'
 import AwsMobileAnalyticsConfig from 'browser/main/lib/AwsMobileAnalyticsConfig'
-import DatePicker from 'browser/components/DatePicker.js'
+import DayPicker from 'browser/components/DayPicker.js'
 
 class NewJournalEntryModal extends React.Component {
   constructor (props) {
@@ -34,6 +34,9 @@ class NewJournalEntryModal extends React.Component {
     // console.log(day)
   }
 
+  handleDayClick (day) {
+    console.log(day)
+  }
   handleDayMouseDown (day) {
     const targetDate = this.state.selectedDate
     const JOURNAL_TITLE = targetDate.toDateString({ weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
@@ -100,13 +103,10 @@ class NewJournalEntryModal extends React.Component {
       >
         <div styleName='header'> <div styleName='title'>Pick a date</div> </div>
         <ModalEscButton handleEscButtonClick={(e) => this.handleCloseButtonClick(e)} />
-        <div>
-        <DatePicker
-          onDayFocus={(d) => { this.handleDayFocus(d) }}
-          onDayMouseDown={(d) => { this.handleDayMouseDown(d) }}
-          selectedDays={this.state.selectedDate}
+        
+        <DayPicker
+          onDayClick={(d) => {this.handleDayClick(d)}}
           />
-          </div>
       </div>
     )
   }
