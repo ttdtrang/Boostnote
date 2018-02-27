@@ -81,13 +81,13 @@ class DayPicker extends React.Component {
       currentMonth.year() == active.year() &&
       currentMonth.month() == active.month() &&
       day == active.date()
+    const mystyle = day
+    ? (isToday
+        ? 'day-today'
+        : (isActive ? 'day-active' : 'day'))
+    : 'day-empty'
     return (
-      <td
-        className={classNames('day', {
-          active: isActive,
-          empty: !day,
-          today: isToday
-        })}
+      <td styleName={mystyle}
         key={`${keyPrefix}.day.${index}`}
         onClick={(e) => { this.handleDayClick(e) }}
       >{day || ''}</td>
@@ -124,7 +124,7 @@ class DayPicker extends React.Component {
           <div styleName='month-year'>{this.state.month.format('MMMM YYYY')}</div>
           <div styleName='next-month' onClick={() => { this.handleNextMonth() }}>▶</div>
         </div>
-        <table className='DayPicker'>
+        <table>
           <thead>
             <tr>
               <th scope='col'>
