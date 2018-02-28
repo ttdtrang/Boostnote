@@ -63,28 +63,6 @@ function data (state = defaultDataMap(), action) {
           tagNoteList.add(uniqueKey)
         })
 
-        const noteTreeData = {}
-        action.notes.forEach((note) => {
-          const myDate = new Date(note.createdAt)
-          // getMonth() is zero-based
-          const [yyyy, mm, dd] = [myDate.getFullYear(), myDate.getMonth() + 1, myDate.getDate()]
-          if (!noteTreeData[yyyy]) {
-            noteTreeData[yyyy] = {}
-            noteTreeData[yyyy][mm] = {}
-            noteTreeData[yyyy][mm][dd] = []
-          } else {
-            if (!noteTreeData[yyyy][mm]) {
-              noteTreeData[yyyy][mm] = {}
-              noteTreeData[yyyy][mm][dd] = []
-            } else {
-              if (!noteTreeData[yyyy][mm][dd]) {
-                noteTreeData[yyyy][mm][dd] = []
-              }
-            }
-          }
-          noteTreeData[yyyy][mm][dd].push(note)
-        })
-
         state.treeVisibilityMap.set('/', true)
       })
       return state
