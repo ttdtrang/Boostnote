@@ -11,12 +11,13 @@ class DayPicker extends React.Component {
     super(props)
     const date = moment()
     this.state = {
-      month: date,
+      active: date,
       keyPrefix: date.format('YYYY.MM')
     }
     this.renderWeek = this.renderWeek.bind(this)
     this.renderDay = this.renderDay.bind(this)
   }
+
   getDays (month) {
     const days = []
     const daysInMonth = month.daysInMonth()
@@ -42,45 +43,34 @@ class DayPicker extends React.Component {
   }
 
   getMonth () {
-    return this.state.month.clone()
+    return this.state.active.clone()
   }
 
   handlePreviousMonth () {
-    const month = this.state.month.subtract(1, 'month')
+    const active = this.state.active.subtract(1, 'month')
     this.setState({
-      month,
-      keyPrefix: month.format('YYYY.MM')
+      active,
+      keyPrefix: active.format('YYYY.MM')
     })
   }
   handleNextMonth () {
-    const month = this.state.month.add(1, 'month')
+    const active = this.state.active.add(1, 'month')
     this.setState({
-      month,
-      keyPrefix: month.format('YYYY.MM')
+      active,
+      keyPrefix: active.format('YYYY.MM')
     })
   }
 
   handleDayClick (event) {
     const dayOfMonth = event.nativeEvent.target.innerText
-    const day = this.state.month.date(dayOfMonth)
-    this.props.onDayClick(day)
+    const active = this.state.active.date(dayOfMonth)
+
+    this.setState({ active })
+    this.props.onDayClick(active)
   }
 
-  renderDay (day, index) {
+  renderDay (day, index, isToday, isActive) {
     const { keyPrefix } = this.state
-    const { active } = this.props
-    const currentMonth = this.state.month
-    const today = moment()
-    // const currentMonth = this.state.month
-    const isToday = day &&
-      currentMonth.year() == today.year() &&
-      currentMonth.month() == today.month() &&
-      day == today.date()
-    const isActive = day &&
-      active &&
-      currentMonth.year() == active.year() &&
-      currentMonth.month() == active.month() &&
-      day == active.date()
     const mystyle = day
     ? (isToday
         ? 'day-today'
@@ -95,14 +85,25 @@ class DayPicker extends React.Component {
   }
 
   renderWeek (days, index) {
-    const { keyPrefix } = this.state
+    const { keyPrefix, active } = this.state
+    const today = moment()
+    // console.log(`${active.year()} - ${active.month()} - ${active.date()}`)
+
+    const isActive = days.map((d) => {
+      return d && active.date() === d
+    })
+    const isToday = days.map((d) => {
+      const day = moment(active)
+      day.date(d)
+      return day && today.year() === day.year() && today.month() === day.month() && today.date() === day.date()
+    })
     const dayComponents = days.map((d, i) => {
-      return (this.renderDay(d, i))
+      return (this.renderDay(d, i, isToday[i], isActive[i]))
     })
     return (
       <tr
         key={`${keyPrefix}.week.${index}`}
-      >
+    >
         {dayComponents}
       </tr>
     )
@@ -113,6 +114,10 @@ class DayPicker extends React.Component {
     const days = this.getDays(month)
     const weeks = this.getWeeks(days)
 
+    const { keyPrefix, active } = this.state
+    const today = moment()
+    // console.log(`${active.year()} - ${active.month()} - ${active.date()}`)
+
     const weekRows = weeks.map((days, i) => {
       return (this.renderWeek(days, i))
     })
@@ -121,7 +126,7 @@ class DayPicker extends React.Component {
       <div className='DayPicker' styleName='root'>
         <div styleName='header'>
           <div styleName='previous-month' onClick={() => { this.handlePreviousMonth() }}>◀</div>
-          <div styleName='month-year'>{this.state.month.format('MMMM YYYY')}</div>
+          <div styleName='month-year'>{this.state.active.format('MMMM YYYY')}</div>
           <div styleName='next-month' onClick={() => { this.handleNextMonth() }}>▶</div>
         </div>
         <table>
@@ -160,7 +165,6 @@ class DayPicker extends React.Component {
 }
 
 DayPicker.propTypes = {
-  active: momentPropTypes.momentObj,
   onDayClick: PropTypes.func.isRequired
 }
 export default CSSModules(DayPicker, styles)

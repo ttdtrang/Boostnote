@@ -35,6 +35,7 @@ class NewJournalEntryModal extends React.Component {
   }
 
   handleDayClick (day) {
+    
     console.log(day)
   }
   handleDayMouseDown (day) {
@@ -103,9 +104,8 @@ class NewJournalEntryModal extends React.Component {
       >
         <div styleName='header'> <div styleName='title'>Pick a date</div> </div>
         <ModalEscButton handleEscButtonClick={(e) => this.handleCloseButtonClick(e)} />
-        
         <DayPicker
-          onDayClick={(d) => {this.handleDayClick(d)}}
+          onDayClick={(d) => { this.handleDayClick(d) }}
           />
       </div>
     )
