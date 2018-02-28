@@ -2,8 +2,6 @@ import React from 'react'
 import CSSModules from 'browser/lib/CSSModules'
 import PropTypes from 'prop-types'
 import moment from 'moment'
-import momentPropTypes from 'react-moment-proptypes'
-import classNames from 'classnames'
 import styles from './DayPicker.styl'
 
 class DayPicker extends React.Component {
@@ -87,11 +85,8 @@ class DayPicker extends React.Component {
   renderWeek (days, index) {
     const { keyPrefix, active } = this.state
     const today = moment()
-    // console.log(`${active.year()} - ${active.month()} - ${active.date()}`)
 
-    const isActive = days.map((d) => {
-      return d && active.date() === d
-    })
+    const isActive = days.map((d) => { return d && active.date() === d })
     const isToday = days.map((d) => {
       const day = moment(active)
       day.date(d)
@@ -101,9 +96,7 @@ class DayPicker extends React.Component {
       return (this.renderDay(d, i, isToday[i], isActive[i]))
     })
     return (
-      <tr
-        key={`${keyPrefix}.week.${index}`}
-    >
+      <tr key={`${keyPrefix}.week.${index}`} >
         {dayComponents}
       </tr>
     )
@@ -113,10 +106,6 @@ class DayPicker extends React.Component {
     const month = this.getMonth()
     const days = this.getDays(month)
     const weeks = this.getWeeks(days)
-
-    const { keyPrefix, active } = this.state
-    const today = moment()
-    // console.log(`${active.year()} - ${active.month()} - ${active.date()}`)
 
     const weekRows = weeks.map((days, i) => {
       return (this.renderWeek(days, i))
