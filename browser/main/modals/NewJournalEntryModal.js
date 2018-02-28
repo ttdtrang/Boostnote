@@ -26,19 +26,7 @@ class NewJournalEntryModal extends React.Component {
     this.props.close()
   }
 
-  handleDayFocus (day) {
-    this.setState({selectedDate: day})
-    console.log(day)
-  }
-
-  handleDayMouseEnter (day) {
-    // console.log(day)
-  }
-
-  handleDayClick (day) {
-    // this.setState({selectedDate: day})
-    // const targetDate = this.state.selectedDate
-    const targetDate = day 
+  handleDayClick (targetDate) {
     // const JOURNAL_TITLE = targetDate.toDateString({ weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
     const JOURNAL_TITLE = targetDate.format('ddd MMM D YYYY')
     AwsMobileAnalyticsConfig.recordDynamicCustomEvent('ADD_MARKDOWN')
@@ -50,7 +38,6 @@ class NewJournalEntryModal extends React.Component {
       for (const uniqueKey of notesInSameFolder) {
         const note = noteMap.get(uniqueKey)
         const theDate = moment(note.journaledAt)
-        console.log(theDate)
         if (theDate.year() === targetDate.year() &&
           theDate.month() === targetDate.month() &&
           theDate.date() === targetDate.date()
@@ -63,11 +50,9 @@ class NewJournalEntryModal extends React.Component {
     if (noteFoundOnThisDate) {
       // TODO: may need another field to record journal entry date. maybe title?
       const note = noteMap.get(noteFoundOnThisDate)
-      console.log('bring me to that one - ' + note.title)
       ee.emit('list:jump', `${note.storage}-${note.key}`)
       ee.emit('detail:focus')
     } else {
-      console.log('create new note for ' + targetDate.format())
       dataApi
       .createNote(storage, {
         type: 'MARKDOWN_NOTE',
