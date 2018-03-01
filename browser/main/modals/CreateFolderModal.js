@@ -28,16 +28,11 @@ class CreateFolderModal extends React.Component {
   }
 
   handleTypeChange (folderType) {
-    const newState = Object.assign({}, this.state)
-    newState.type = folderType
-    this.setState(newState)
-    console.log(folderType)
+    this.setState({type: folderType})
   }
 
   handleChange (e) {
-    const newState = Object.assign({}, this.state)
-    newState.name = this.refs.name.value
-    this.setState(newState)
+    this.setState({name: this.ref.name.value})
   }
 
   handleKeyDown (e) {
