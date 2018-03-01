@@ -100,13 +100,17 @@ class CreateFolderModal extends React.Component {
               onChange={(e) => this.handleChange(e)}
               onKeyDown={(e) => this.handleInputKeyDown(e)}
             />
+          </div>
+          <div styleName='control-folder'>
             <div styleName='control-folder-label'>Folder type</div>
-            <button styleName={this.state.type === 'COLLECTION' ? 'button-folderType--active' : 'button-folderType'}
-              onClick={(e) => this.handleTypeChange('COLLECTION')}>Collection
-            </button>
-            <button styleName={this.state.type === 'JOURNAL' ? 'button-folderType--active' : 'button-folderType'}
-              onClick={(e) => this.handleTypeChange('JOURNAL')}>Journal
-            </button>
+            <div styleName='div-folderType'>
+              <button styleName={this.state.type === 'COLLECTION' ? 'button-folderType--active' : 'button-folderType'}
+                onClick={(e) => this.handleTypeChange('COLLECTION')}>Collection
+              </button>
+              <button styleName={this.state.type === 'JOURNAL' ? 'button-folderType--active' : 'button-folderType'}
+                onClick={(e) => this.handleTypeChange('JOURNAL')}>Journal
+              </button>
+            </div>
           </div>
           <button styleName='control-confirmButton'
             onClick={(e) => this.handleConfirmButtonClick(e)}

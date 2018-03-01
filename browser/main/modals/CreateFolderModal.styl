@@ -1,4 +1,16 @@
 $rHeight = 350px
+button-folderType()
+  display block 
+  width 44%
+  height 40px
+  border none
+  border-radius 2px
+  padding 0 25px
+  margin 10px auto
+  font-size 14px
+  border 1px solid #C9C9C7
+  colorDefaultButton()
+
 .root
   modal()
   width 500px
@@ -18,6 +30,10 @@ $rHeight = 350px
   font-size 36px
   font-weight 600
 
+.control-folder // a div
+  display flex
+  flex-direction column
+
 .control-folder-label
   text-align left
   font-size 14px
@@ -26,9 +42,9 @@ $rHeight = 350px
 .control-folder-input
   display block
   height 40px
-  width 490px
+  width 94% 
   padding 0 5px
-  margin 10px 0
+  margin 10px auto
   border 1px solid $ui-input--create-folder-modal
   border-radius 2px
   background-color transparent
@@ -47,31 +63,19 @@ $rHeight = 350px
   border none
   border-radius 2px
   padding 0 25px
-  margin 20px auto
+  margin 10px auto
   font-size 14px
   colorPrimaryButton()
 
+.div-folderType
+  display flex
+  width 100%
 
 .button-folderType
-  display inline 
-  height 35px
-  width 100px
-  border none
-  border-radius 2px
-  padding 0 25px
-  margin 20px auto
-  font-size 14px
+  button-folderType()
 .button-folderType--active
-  display inline 
-  height 35px
-  width 100px
-  border none
-  border-radius 2px
-  padding 0 25px
-  margin 20px auto
-  color red
-
-
+  button-folderType()
+  colorPrimaryButton() 
 body[data-theme="dark"]
   .root
     modalDark()
