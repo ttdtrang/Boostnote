@@ -31,6 +31,12 @@ function sortByUpdatedAt (a, b) {
   return new Date(b.updatedAt) - new Date(a.updatedAt)
 }
 
+function sortByJournaledAt (a, b) {
+  const aV = a.journaledAt ? new Date(a.journaledAt) : new Date(a.createdAt)
+  const bV = b.journaledAt ? new Date(b.journaledAt) : new Date(b.createdAt)
+  return bV - aV
+}
+
 function findNoteByKey (notes, noteKey) {
   return notes.find((note) => `${note.storage}-${note.key}` === noteKey)
 }
@@ -700,6 +706,8 @@ class NoteList extends React.Component {
       ? sortByCreatedAt
       : config.sortBy === 'ALPHABETICAL'
       ? sortByAlphabetical
+      : config.sortBy === 'JOURNALED_AT'
+      ? sortByJournaledAt
       : sortByUpdatedAt
     const sortedNotes = location.pathname.match(/\/starred|\/trash/)
         ? this.getNotes().sort(sortFunc)
@@ -730,7 +738,9 @@ class NoteList extends React.Component {
 
     const noteTreeData = {}
     notes.forEach((note) => {
-      const myDate = new Date(note.createdAt)
+      const myDate = (config.sortBy === 'JOURNALED_AT' && note.journaledAt)
+      ? new Date(note.journaledAt)
+      : new Date(note.createdAt)
         // getMonth() is zero-based
       const [yyyy, mm, dd] = [myDate.getFullYear(), myDate.getMonth() + 1, myDate.getDate()]
       if (!noteTreeData[yyyy]) {
@@ -814,9 +824,10 @@ class NoteList extends React.Component {
               value={config.sortBy}
               onChange={(e) => this.handleSortByChange(e)}
             >
-              <option title='Sort by update time' value='UPDATED_AT'>Updated</option>
+              <option title='Sort by journal entry date' value='JOURNALED_AT'>Journal date</option>
               <option title='Sort by create time' value='CREATED_AT'>Created</option>
-              <option title='Sort alphabetically' value='ALPHABETICAL'>Alphabetically</option>
+              {config.listStyle === 'DATETREE' ? '' : (<option title='Sort by update time' value='UPDATED_AT'>Updated</option>)}
+              {config.listStyle === 'DATETREE' ? '' : (<option title='Sort alphabetically' value='ALPHABETICAL'>Alphabetically</option>)}
             </select>
           </div>
           <div styleName='control-button-area'>
