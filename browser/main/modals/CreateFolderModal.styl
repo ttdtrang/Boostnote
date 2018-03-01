@@ -1,10 +1,10 @@
+$rHeight = 350px
 .root
   modal()
   width 500px
-  height 270px
-  overflow hidden
+  height $rHeight 
+  overflow hidden 
   position relative
-
 .header
   height 80px
   margin-bottom 10px
@@ -52,24 +52,31 @@
   colorPrimaryButton()
 
 
-// .button-folderType
-//   display block
-//   height 35px
-//   width 100px
-//   border none
-//   border-radius 2px
-//   padding 0 25px
-//   margin 20px auto
-//   font-size 14px
-//   colorPrimaryButton()
-// .button-folderType--active
-//   border 1px
+.button-folderType
+  display inline 
+  height 35px
+  width 100px
+  border none
+  border-radius 2px
+  padding 0 25px
+  margin 20px auto
+  font-size 14px
+.button-folderType--active
+  display inline 
+  height 35px
+  width 100px
+  border none
+  border-radius 2px
+  padding 0 25px
+  margin 20px auto
+  color red
+
 
 body[data-theme="dark"]
   .root
     modalDark()
     width 500px
-    height 270px
+    height $rHeight 
     overflow hidden
     position relative
 
@@ -95,7 +102,7 @@ body[data-theme="solarized-dark"]
   .root
     modalSolarizedDark()
     width 500px
-    height 270px
+    height $rHeight 
     overflow hidden
     position relative
 
