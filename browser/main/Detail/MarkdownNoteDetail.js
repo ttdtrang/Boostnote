@@ -220,9 +220,10 @@ class MarkdownNoteDetail extends React.Component {
   existJournalEntry (journaledAt, storagefolderKey) {
     const checkDate = new Date(journaledAt)
     const { data } = this.props
-    for (let nk of data.folderNoteMap.get(storagefolderKey)) {
-      const foundDate = new Date(data.noteMap.get(nk).journaledAt)
-      if (checkDate.getFullYear() === foundDate.getFullYear() &&
+    for (const nk of data.folderNoteMap.get(storagefolderKey)) {
+      const note = data.noteMap.get(nk)
+      const foundDate = new Date(note.journaledAt)
+      if ((!note.isTrashed) && checkDate.getFullYear() === foundDate.getFullYear() &&
           checkDate.getMonth() === foundDate.getMonth() &&
           checkDate.getDate() === foundDate.getDate()) {
         return true
@@ -241,7 +242,6 @@ class MarkdownNoteDetail extends React.Component {
 
   handleUndoButtonClick (e) {
     const { note } = this.state
-
     // If note is JOURNAL entry, check the target first
     const folder = this.resolveTargetFolder(note)
     if (folder.type === 'JOURNAL' && this.existJournalEntry(note.journaledAt, `${note.storage}-${note.folder}`)) {

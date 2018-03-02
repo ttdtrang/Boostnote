@@ -32,7 +32,7 @@ class CreateFolderModal extends React.Component {
   }
 
   handleChange (e) {
-    this.setState({name: this.ref.name.value})
+    this.setState({name: this.refs.name.value})
   }
 
   handleKeyDown (e) {
