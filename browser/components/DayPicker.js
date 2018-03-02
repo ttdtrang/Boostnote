@@ -12,7 +12,6 @@ class DayPicker extends React.Component {
       active: date,
       keyPrefix: date.format('YYYY.MM')
     }
-    this.renderWeek = this.renderWeek.bind(this)
     this.renderDay = this.renderDay.bind(this)
   }
 
@@ -27,6 +26,10 @@ class DayPicker extends React.Component {
     }
     for (let i = 1; i <= daysInMonth; i++) {
       days.push(i)
+    }
+    const padding = 7 - (days.length % 7)
+    for (let i = 0; i <= padding; i++) {
+      days.push(null)
     }
     return days
   }
@@ -69,21 +72,21 @@ class DayPicker extends React.Component {
 
   renderDay (day, index, isToday, isActive) {
     const { keyPrefix } = this.state
-    const mystyle = day
+    const mystyle = 'calendar-day' + (day
     ? (isToday
-        ? 'day-today'
-        : (isActive ? 'day-active' : 'day'))
-    : 'day-empty'
+        ? '--today'
+        : (isActive ? '--active' : ''))
+    : '--empty')
     return (
-      <td styleName={mystyle}
+      <div styleName={mystyle}
         key={`${keyPrefix}.day.${index}`}
         onClick={(e) => { this.handleDayClick(e) }}
-      >{day || ''}</td>
+      >{day || ''}</div>
     )
   }
 
-  renderWeek (days, index) {
-    const { keyPrefix, active } = this.state
+  renderBody (days) {
+    const { active } = this.state
     const today = moment()
 
     const isActive = days.map((d) => { return d && active.date() === d })
@@ -92,62 +95,46 @@ class DayPicker extends React.Component {
       day.date(d)
       return day && today.year() === day.year() && today.month() === day.month() && today.date() === day.date()
     })
-    const dayComponents = days.map((d, i) => {
+    const dayElements = days.map((d, i) => {
       return (this.renderDay(d, i, isToday[i], isActive[i]))
     })
     return (
-      <tr key={`${keyPrefix}.week.${index}`} >
-        {dayComponents}
-      </tr>
+      <div styleName='calendar-body'>
+        {dayElements}
+      </div>
     )
   }
 
+  renderControl () {
+    return (
+      <div styleName='calendar-control'>
+        <div styleName='previous-month' onClick={() => { this.handlePreviousMonth() }}>◀</div>
+        <div styleName='month-year'>{this.state.active.format('MMMM YYYY')}</div>
+        <div styleName='next-month' onClick={() => { this.handleNextMonth() }}>▶</div>
+      </div>
+    )
+  }
+  renderHeader () {
+    const titles = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+    const labels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+    const children = labels.map((l, i) => {
+      return (<div key={i} title={titles[i]} styleName='calendar-header-weekday'>{l}</div>)
+    })
+    return (
+      <div styleName='calendar-header'>
+        {children}
+      </div>
+    )
+  }
   render () {
     const month = this.getMonth()
     const days = this.getDays(month)
-    const weeks = this.getWeeks(days)
-
-    const weekRows = weeks.map((days, i) => {
-      return (this.renderWeek(days, i))
-    })
-
+    const body = this.renderBody(days)
     return (
       <div className='DayPicker' styleName='root'>
-        <div styleName='header'>
-          <div styleName='previous-month' onClick={() => { this.handlePreviousMonth() }}>◀</div>
-          <div styleName='month-year'>{this.state.active.format('MMMM YYYY')}</div>
-          <div styleName='next-month' onClick={() => { this.handleNextMonth() }}>▶</div>
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th scope='col'>
-                <abbr title='Sunday'>Sun</abbr>
-              </th>
-              <th scope='col'>
-                <abbr title='Monday'>Mon</abbr>
-              </th>
-              <th scope='col'>
-                <abbr title='Tuesday'>Tue</abbr>
-              </th>
-              <th scope='col'>
-                <abbr title='Wednesday'>Wed</abbr>
-              </th>
-              <th scope='col'>
-                <abbr title='Thursday'>Thu</abbr>
-              </th>
-              <th scope='col'>
-                <abbr title='Friday'>Fri</abbr>
-              </th>
-              <th scope='col'>
-                <abbr title='Saturday'>Sat</abbr>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {weekRows}
-          </tbody>
-        </table>
+        {this.renderControl()}
+        {this.renderHeader()}
+        {body}
       </div>
     )
   }
