@@ -40,7 +40,7 @@ class NewJournalEntryModal extends React.Component {
         const theDate = moment(note.journaledAt)
         if (theDate.year() === targetDate.year() &&
           theDate.month() === targetDate.month() &&
-          theDate.date() === targetDate.date()
+          theDate.date() === targetDate.date() && (!note.isTrashed)
         ) {
           noteFoundOnThisDate = uniqueKey
           break
@@ -48,7 +48,6 @@ class NewJournalEntryModal extends React.Component {
       }
     }
     if (noteFoundOnThisDate) {
-      // TODO: may need another field to record journal entry date. maybe title?
       const note = noteMap.get(noteFoundOnThisDate)
       ee.emit('list:jump', `${note.storage}-${note.key}`)
       ee.emit('detail:focus')

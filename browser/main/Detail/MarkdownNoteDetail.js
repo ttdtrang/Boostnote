@@ -28,6 +28,8 @@ import InfoPanelTrashed from './InfoPanelTrashed'
 import { formatDate } from 'browser/lib/date-formatter'
 import { getTodoPercentageOfCompleted } from 'browser/lib/getTodoStatus'
 import striptags from 'striptags'
+import { remote } from 'electron'
+const { dialog } = remote
 
 class MarkdownNoteDetail extends React.Component {
   constructor (props) {
@@ -215,18 +217,54 @@ class MarkdownNoteDetail extends React.Component {
     }
   }
 
+  existJournalEntry (journaledAt, storagefolderKey) {
+    const checkDate = new Date(journaledAt)
+    const { data } = this.props
+    console.log('checking ' + checkDate)
+    console.log(data.folderNoteMap.get(storagefolderKey))
+    for (let nk of data.folderNoteMap.get(storagefolderKey)) {
+      const foundDate = new Date(data.noteMap.get(nk).journaledAt)
+      console.log('against ' + foundDate)
+      if (checkDate.getFullYear() === foundDate.getFullYear() &&
+          checkDate.getMonth() === foundDate.getMonth() &&
+          checkDate.getDate() === foundDate.getDate()) {
+        return true
+      }
+    }
+    return false
+  }
+  resolveTargetFolder (note) {
+    const {data} = this.props
+    const storageKey = note.storage
+    const folderKey = note.folder
+    const storage = data.storageMap.get(storageKey)
+    const folder = _.find(storage.folders, {key: folderKey}) || storage.folders[0]
+    return folder
+  }
+
   handleUndoButtonClick (e) {
     const { note } = this.state
 
-    note.isTrashed = false
-
-    this.setState({
-      note
-    }, () => {
-      this.save()
-      this.refs.content.reload()
-      ee.emit('list:next')
-    })
+    // If note is JOURNAL entry, check the target first
+    console.log(note)
+    const folder = this.resolveTargetFolder(note)
+    console.log(folder.type)
+    if (folder.type === 'JOURNAL' && this.existJournalEntry(note.journaledAt, `${note.storage}-${note.folder}`)) {
+      dialog.showMessageBox(remote.getCurrentWindow(), {
+        type: 'warning',
+        message: 'Cannot restore note: Journal entry existed for the same date.',
+        detail: 'Please consider manual copy of note content, or removing the existing entry first.',
+        buttons: ['OK']
+      })
+    } else {
+      note.isTrashed = false
+      this.setState({ note
+      }, () => {
+        this.save()
+        this.refs.content.reload()
+        ee.emit('list:next')
+      })
+    }
   }
 
   handleFullScreenButton (e) {
