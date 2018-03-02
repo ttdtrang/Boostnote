@@ -220,11 +220,8 @@ class MarkdownNoteDetail extends React.Component {
   existJournalEntry (journaledAt, storagefolderKey) {
     const checkDate = new Date(journaledAt)
     const { data } = this.props
-    console.log('checking ' + checkDate)
-    console.log(data.folderNoteMap.get(storagefolderKey))
     for (let nk of data.folderNoteMap.get(storagefolderKey)) {
       const foundDate = new Date(data.noteMap.get(nk).journaledAt)
-      console.log('against ' + foundDate)
       if (checkDate.getFullYear() === foundDate.getFullYear() &&
           checkDate.getMonth() === foundDate.getMonth() &&
           checkDate.getDate() === foundDate.getDate()) {
@@ -246,9 +243,7 @@ class MarkdownNoteDetail extends React.Component {
     const { note } = this.state
 
     // If note is JOURNAL entry, check the target first
-    console.log(note)
     const folder = this.resolveTargetFolder(note)
-    console.log(folder.type)
     if (folder.type === 'JOURNAL' && this.existJournalEntry(note.journaledAt, `${note.storage}-${note.folder}`)) {
       dialog.showMessageBox(remote.getCurrentWindow(), {
         type: 'warning',
