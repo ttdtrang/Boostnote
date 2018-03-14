@@ -6,6 +6,19 @@ import React from 'react'
 import styles from './StorageItem.styl'
 import CSSModules from 'browser/lib/CSSModules'
 import _ from 'lodash'
+import { SortableHandle } from 'react-sortable-hoc'
+
+const DraggableIcon = SortableHandle(({ className }) => (
+  <i className={`fa ${className}`} />
+))
+
+const FolderIcon = ({ folderType, color, isActive }) => {
+  const className = (folderType === 'JOURNAL')
+  ? 'fa-calendar-o' : (isActive ? 'fa-folder-open-o' : 'fa-folder-o')
+  return (
+    <text style={{color: color, paddingRight: '10px'}}><i className={`fa ${className}`} /></text>
+  )
+}
 
 /**
  * @param {boolean} isActive
@@ -21,37 +34,52 @@ import _ from 'lodash'
  * @return {React.Component}
  */
 const StorageItem = ({
-  isActive, handleButtonClick, handleContextMenu, folderName, folderType,
-  folderColor, isFolded, noteCount, handleDrop, handleDragEnter, handleDragLeave
+  styles,
+  isActive,
+  handleButtonClick,
+  handleContextMenu,
+  folderName,
+  folderType,
+  folderColor,
+  isFolded,
+  noteCount,
+  handleDrop,
+  handleDragEnter,
+  handleDragLeave
 }) => {
-  const folderIcon = (folderType === 'JOURNAL')
-  ? (<i className='fa fa-calendar-o' />)
-  : (isActive ? (<i className='fa fa-folder-open-o' />) : (<i className='fa fa-folder-o' />))
-
   return (
-    <button styleName={isActive
-        ? 'folderList-item--active'
-        : 'folderList-item'
-      }
+    <button
+      styleName={isActive ? 'folderList-item--active' : 'folderList-item'}
       onClick={handleButtonClick}
       onContextMenu={handleContextMenu}
       onDrop={handleDrop}
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
     >
-      <span styleName={isFolded
-        ? 'folderList-item-name--folded' : 'folderList-item-name'
-      }>
-        <text style={{color: folderColor, paddingRight: '10px'}}>{folderIcon}</text>{isFolded ? _.truncate(folderName, {length: 1, omission: ''}) : folderName}
+      {!isFolded && (
+        <DraggableIcon className={styles['folderList-item-reorder']} />
+      )}
+      <span
+        styleName={
+          isFolded ? 'folderList-item-name--folded' : 'folderList-item-name'
+        }
+      >
+        <FolderIcon
+          folderType={folderType}
+          color={folderColor}
+          isActive={isActive}
+        />
+        {isFolded
+          ? _.truncate(folderName, { length: 1, omission: '' })
+          : folderName}
       </span>
-      {(!isFolded && _.isNumber(noteCount)) &&
-        <span styleName='folderList-item-noteCount'>{noteCount}</span>
-      }
-      {isFolded &&
-        <span styleName='folderList-item-tooltip'>
-          {folderName}
-        </span>
-      }
+      {!isFolded &&
+        _.isNumber(noteCount) && (
+          <span styleName='folderList-item-noteCount'>{noteCount}</span>
+        )}
+      {isFolded && (
+        <span styleName='folderList-item-tooltip'>{folderName}</span>
+      )}
     </button>
   )
 }
