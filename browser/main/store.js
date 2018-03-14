@@ -28,7 +28,7 @@ function data (state = defaultDataMap(), action) {
 
       action.notes.some((note) => {
         if (note === undefined) return true
-        const uniqueKey = note.storage + '-' + note.key
+        const uniqueKey = note.key
         const folderKey = note.storage + '-' + note.folder
         state.noteMap.set(uniqueKey, note)
 
@@ -69,7 +69,7 @@ function data (state = defaultDataMap(), action) {
     case 'UPDATE_NOTE':
       {
         const note = action.note
-        const uniqueKey = note.storage + '-' + note.key
+        const uniqueKey = note.key
         const folderKey = note.storage + '-' + note.folder
         const oldNote = state.noteMap.get(uniqueKey)
 
@@ -165,9 +165,9 @@ function data (state = defaultDataMap(), action) {
     case 'MOVE_NOTE':
       {
         const originNote = action.originNote
-        const originKey = originNote.storage + '-' + originNote.key
+        const originKey = originNote.key
         const note = action.note
-        const uniqueKey = note.storage + '-' + note.key
+        const uniqueKey = note.key
         const folderKey = note.storage + '-' + note.folder
         const oldNote = state.noteMap.get(uniqueKey)
 
@@ -300,7 +300,7 @@ function data (state = defaultDataMap(), action) {
       }
     case 'DELETE_NOTE':
       {
-        const uniqueKey = action.storageKey + '-' + action.noteKey
+        const uniqueKey = action.noteKey
         const targetNote = state.noteMap.get(uniqueKey)
 
         state = Object.assign({}, state)
@@ -426,7 +426,7 @@ function data (state = defaultDataMap(), action) {
       state.folderNoteMap = new Map(state.folderNoteMap)
       state.tagNoteMap = new Map(state.tagNoteMap)
       action.notes.forEach((note) => {
-        const uniqueKey = note.storage + '-' + note.key
+        const uniqueKey = note.key
         const folderKey = note.storage + '-' + note.folder
         state.noteMap.set(uniqueKey, note)
 
@@ -486,7 +486,7 @@ function data (state = defaultDataMap(), action) {
         state.tagNoteMap = new Map(state.tagNoteMap)
         state.starredSet = new Set(state.starredSet)
         notes.forEach((note) => {
-          const noteKey = storage.key + '-' + note.key
+          const noteKey = note.key
           state.noteMap.delete(noteKey)
           state.starredSet.delete(noteKey)
           note.tags.forEach((tag) => {
